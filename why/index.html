@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Why - Sherpa</title>
+		<link rel="stylesheet" href="/who/mjl/style.css" />
+	</head>
+	<body>
+<div class="crumbs">
+	<a href="../../">mjl</a> &gt;
+	<a href="../">sherpa</a> &gt;
+	<a class="last" href="./">why</a>
+</div>
+
+<div class="tocbar">
+	<a href="../">Sherpa</a> |
+	<a href="../specification/">Specification</a> |
+	<a href="../sherpajs/">Sherpajs</a> |
+	<a href="../implementations/">Implementations</a> |
+	<a class="active" href="../why/">Why</a> |
+	<a href="../faq/">FAQ</a> |
+	<a href="../about/">About</a>
+</div>
+
+<h1 id="why"><a href="#why">Why Sherpa?</a></h1>
+<p>
+From my experience, too much time is spent on designing and building REST API's. This typically leads to complexity that can be avoided. Some things I don't like about the practice of REST API's:
+</p>
+
+
+<h2>Mapping URL's to functions</h2>
+<p>
+It's often ambiguous how your data domain should be mapped to URL's.  Should it be <code>/api/v1/user/:id</code>, or should it be <code>/api/v1/group/:id/user/:id</code>? It depends. With a RESTful implementation, you'll usually map such URL templates to a function that is called as a HTTP request handler. With Sherpa, the URL-mapping part is simply not there, it's just the function that you cared about. Simpler.
+</p>
+
+<h2>HTTP is too cool</h2>
+<p>
+RESTful-fans seem to think HTTP must be used to its fullest extent. First, HTTP is cool and has been great for the internet. Second, HTTP also has plenty of flaws, is quite complex, and has features that don't really work nicely with eachother. "Using HTTP" also gives a false impression of compliance. Does your REST API handle <code>If-Modified-Since</code> headers properly? Is it prepared to handle one of the many other headers HTTP clients might throw at it? Sherpa simply skips all that complexity.
+</p>
+
+<h2>HTTP methods and status codes</h2>
+<p>
+Part of designing REST API's involves specifying the semantics the various HTTP methods have on your endpoints. Some HTTP methods might not be supported, you have to document that. The same goes for HTTP status codes. You have to specify which you're going to send. It's usually semi-standard among REST API's, but people go to various lengths to respond with standard HTTP status codes. But then, what should a client library do when it receives a status "200" for creating an object with a POST? Is that an error from the API? Should the client library take that as a sign the object already existed? HTTP status codes for RESTful operations often confuse more than they clarify.
+</p>
+
+<h2>You're going to need HTTP POST for "other stuff"</h2>
+<p>
+REST API's all start with good intentions. Modelling the data structures on HTTP URL's (URI's to be correct, of course). However, sooner or later you need operations that are different from fetching (GET), creating (POST), modifying (PATCH), overwriting (PUT) and removing (DELETE). So you create a special endpoint to which the REST API consumer has to POST some JSON body. E.g. to <code>/api/v1/user/123/send-confirmation</code>. In practice, most of the stuff that makes your app interesting will be such POST calls.  With Sherpa, that's what you always use.
+</p>
+
+<h2>Data modelling, but primitive</h2>
+<p>
+With REST, you're modelling your data as URLs. It doesn't do a lot more. If you're implementing such an API, you'll realize a lot of stuff is missing. If you're building an app that must list tables full of data, you'll need pagination soon enough. You cannot just return all millions of objects when a client requests IMDB's <code>/api/v1/movie</code>.  So you add query string parameters than handle pagination. And filtering. And sorting. So what is that endpoint representing? Not any data objects. It's just some sort of method for looking at data. With Sherpa, you skip all that pretending, and just realize it's just a function that you can call.
+</p>
+
+<h2>Linkability</h2>
+
+<h2>Discovering</h2>
+<p>
+REST API's are not automatically discoverable. How would you list which endpoints exist?  With URL templates that include strings like "/:id/"?  How do you start using the API? Probably you'll start by just creating URL's in JavaScript and fetching data. E.g. with <code>jQuery.getJSON</code>. This works for a while. But pretty soon you'll want to automate some of that. And you'll write a client library for your specific REST API. Lots of wasted energy. With Sherpa, you automatically get a client library just by creating an API.
+</p>
+
+<h2>Documentation</h2>
+<p>
+REST API's are relatively hard to document. Each endpoint has multiple dimensions for which behaviour has to be documented:
+</p>
+<ul>
+<li>Allowed methods, e.g. GET, PUT, PATCH, DELETE, POST</li>
+<li>HTTP headers that are, or are not treated as you might expect (e.g. content-type negotiation, conditional requests). This is often simply ignored by REST API implementors.</li>
+<li>Query string parameters. This is often used for filtering/sorting/paginating data. Typically, unrecognized query string parameters are simply ignored. This is quite unhelpful for web developers. Mistyping a query string parameter will still do something, just not what you as programmer expected.</li>
+<li>HTTP status codes. Which is your REST API using? Do you properly use "201" for created objects? Have you actually used the distinction between status "200", "201" and "204" in your applications? In my experience, you "should" use the proper status codes, but this is not used in an useful way.</li>
+<li>JSON bodies, both in requests and responses. There is no standard way to model error messages in "REST", so everyone makes something up.  In Sherpa, you only have to care about the JSON bodies, not all the other stuff above.</li>
+</ul>
+<p>
+So how do you actually document REST API's? Well, you might use RAML. Or Swagger. Most of the complexity of those tools is for specifying all the dimensions listed above. That's a lot of work for very little gain.
+</p>
+
+<h1>Other HTTP RPC API's: SOAP, XMLRPC, JSON-RPC</h1>
+<p>
+...
+</p>
+
+<h1>REST features dispelled</h1>
+<p>
+hateos.
+</p>
+
+<p>
+representational state transfer,
+Performance, Scalability, Simplicity, Modifiability, Visibility, Portability, and Reliability
+</p>
+<p>
+Scalability: caching proxies
+Modifiability of components, even while running (ie js? sherpa does that by default; but this is really about your application, not some random API you want to use)
+Visibility (you can see the communication, sherpa does that.
+Portability (moving code with the data; we provide a js)
+Reliability (how does rest provide this?)
+</p>
+
+<p>
+client-server (no data at client); servers have no idea of user interface
+stateless servers (no client state on server)
+cacheable (not in sherpa, but you often don't even want this. only if you do should use provide a resty endpoint)
+layered system, clients don't know if they are takling to the end system or some intermediary. in practice this is not something you can use without thinking hard about it. eg modifying data is typically really only done at the one server/database that has the data.  if you have something smarter, you've thought very hard about that.
+code on demand (optional in rest!), you can replace pieces of code.  well, i would say this isn't part of the api or data model. it's about your application structure and software engineering practices.  you could mix the two, but typically this isn't very important.  a page refresh is never far away.
+</p>
+
+<p>
+todo: look at REST API's from twitter, google, facebook, amazon aws, etc. and see how they would look in sherpa.
+<p>
+
+	</body>
+</html>

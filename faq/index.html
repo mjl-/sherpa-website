@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>FAQ - Sherpa</title>
+		<link rel="stylesheet" href="../style.css" />
+	</head>
+	<body>
+<div class="crumbs">
+	<a href="../../">mjl</a> &gt;
+	<a href="../">sherpa</a> &gt;
+	<a class="last" href="./">faq</a>
+</div>
+
+<div class="tocbar">
+	<a href="../">Sherpa</a> |
+	<a href="../specification/">Specification</a> |
+	<a href="../sherpajs/">Sherpajs</a> |
+	<a href="../implementations/">Implementations</a> |
+	<a href="../why/">Why</a> |
+	<a class="active" href="../faq/">FAQ</a> |
+	<a href="../about/">About</a>
+</div>
+
+<h1 id="faq"><a href="#faq">FAQ</a></h1>
+<h2 id="restful"><a href="#restful">Are Sherpa API's RESTful?</a></h2>
+<p>
+Not really. REST API's take a data-centric approach. They try to model the data on URL's, and use HTTP methods to model operations. Sherpa API's take a function centric approach, just like JSON-RPC and (a longer time ago) XMLRPC. Sherpa API's takes away all the trouble of coming up with proper URL mappings, HTTP method mappings and header intricacies (typically simply ignored by REST API designers).
+</p>
+
+<h2 id="..."><a href="#...">API versioning</a></h2>
+<p>
+Clients should check that they support the Sherpa protocol version specified in metaVersion. If a future Sherpa protocol is incompatible, it will probably be easiest to just use a new (additional) API endpoint to export your API functions using the new protocol.
+</p>
+
+<p>
+You'll probably mostly increase the minor and patch version of the semantic version of your API. In practice, it is very hard to remove API functions or make backwards incompatible changes. This is usually done by either publishing a new API on a new endpoint, or by adding new methods (and possibly marking old ones as deprecated).
+</p>
+
+<h2 id="..."><a href="#...">Documentation</a></h2>
+<p>
+...
+</p>
+
+<h2 id="..."><a href="#...">Caching</a></h2>
+<p>
+...
+</p>
+
+<h2 id="..."><a href="#...">Testing</a></h2>
+<p>
+...
+</p>
+
+<h2 id="..."><a href="#...">Who is using Sherpa API's?</a></h2>
+<p>
+...
+</p>
+
+<h2 id="..."><a href="#...">Does Sherpa provide a standard way to filter/sort/paginate data?</a></h2>
+<p>
+...
+</p>
+
+<h2 id="..."><a href="#...">How do I model error messages in Sherpa?</a></h2>
+<p>
+...
+</p>
+
+<h2 id="..."><a href="#...">Can I call multiple Sherpa function in a single HTTP request?</a></h2>
+<p>
+todo: Support for executing multiple function calls in a single HTTP POST to the API endpoint has not yet been implemented. This will probably be implemented soon.
+</p>
+
+<h2 id="..."><a href="#...">Does Sherpa support server-sent events or websockets?</a></h2>
+<p>
+sse: Should talk about this. Maybe we can use the call-json-object to start an SSE-request, and then either do plain json responses, or sherpa-response-objects for each object.
+</p>
+<p>
+websockets: talk about web sockets. not really interested in this right now. i prefer looking at server-sent events.
+</p>
+
+<h2 id="..."><a href="#...">Can I still use RESTful endpoints when using Sherpa?</a></h2>
+<p>
+...
+</p>
+
+<h2 id="..."><a href="#...">Does Sherpa provide an authentication mechanism?</a></h2>
+<p>
+...
+</p>
+
+<h2 id="..."><a href="#...">Does Sherpa support JSONP?</a></h2>
+<p>
+JSONP calls are not yet supported. There is no reason is cannot be supported though, so a scheme will probably be designed when the need arises or you beat me to it.
+</p>
+
+<h2 id="..."><a href="#...">How should I implement file uploads?</a></h2>
+<p>
+Sherpa was designed for the web. How does it deal with file uploads? xxx to do.
+</p>
+
+	</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Sherpajs - Sherpa</title>
+		<link rel="stylesheet" href="/who/mjl/style.css" />
+	</head>
+	<body>
+<div class="crumbs">
+	<a href="../../">mjl</a> &gt;
+	<a href="../">sherpa</a> &gt;
+	<a class="last" href="./">sherpajs</a>
+</div>
+
+<div class="tocbar">
+	<a href="../">Sherpa</a> |
+	<a href="../specification/">Specification</a> |
+	<a class="active" href="../sherpajs/">Sherpajs</a> |
+	<a href="../implementations/">Implementations</a> |
+	<a href="../why/">Why</a> |
+	<a href="../faq/">FAQ</a> |
+	<a href="../about/">About</a>
+</div>
+
+<h1 id="consuming-a-sherpa-api"><a href="#consuming-a-sherpa-api">Consuming a Sherpa API</a></h1>
+<p>
+In the introduction we showed the easiest way to get started with Sherpa API's.  Sherpa API's serve a tiny JavaScript library that exposes an API object. That object provides JavaScript functions for all API functions available.  For use in production, you might not want to include such an external library.
+</p>
+
+<h2 id="sherpajs"><a href="#sherpajs">Use sherpa.js</a></h2>
+<p>
+Use <a href="https://bitbucket.org/mjl/sherpaweb/assets/s/js/sherpa.js">sherpa.js</a>, available from the sherpaweb repository. Sherpaweb uses it to access Sherpa API's. You can include this file in your project. Then call either <code>Sherpa.init(url, methodNames)</code> or <code>Sherpa.load(url)</code>.  Both yield an API object on which you can call the functions exported by the API. Those function calls return promise-like objects ("thenables").
+</p>
+
+<h2 id="sherpajs-init"><a href="#sherpajs-init">Sherpa.init</a></h2>
+<p>If the list of functions your Sherpa-API-consuming-app uses is fixed, <code>Sherpa.init</code> is the easiest way to get started. It returns an API object ready to call functions on:</p>
+<code><pre>&lt;script src="/static/js/sherpa.js"&gt;
+&lt;script&gt;
+var exampleapi = Sherpa.init('https://sherpa.irias.nl/exampleapi/', ['requestCount'])
+
+exampleapi.requestCount()
+.then(function(result) {
+	alert('Number of requests: '+result);
+}, function(error) {
+	alert('Error: '+JSON.stringify(error));
+});
+&lt;/script&gt;</pre></code>
+
+<h2 id="sherpajs-load"><a href="#sherpajs-load">Sherpa.load</a></h2>
+<p>
+If the list of functions is not known beforehand, you should use <code>Sherpa.load</code>. Sherpaweb uses it too. The JSON returned by the provided URL describes the API functions. Based on that list, <code>Sherpa.load</code> creates an API object just like <code>Sherpa.init</code>. The difference is that <code>Sherpa.load</code> doesn't return the API object, but a thenable that yields the API object on success. Let's look at an example.
+</p>
+
+<code><pre>&lt;script src="/static/js/sherpa.js"&gt;
+&lt;script&gt;
+Sherpa.load('https://sherpa.irias.nl/exampleapi/')
+.then(function(exampleapi) {
+	exampleapi.requestCount()
+	.then(function(result) {
+		alert('Number of requests: '+JSON.stringify(result));
+	}, function(error) {
+		alert('Error: '+JSON.stringify(error));
+	});
+
+	...
+});
+&lt;/script&gt;</pre></code>
+
+<p>
+Important note: The API functions, like <code>requestCount</code>, don't return full JavaScript promises, just "thenables". You can turn a thenable into a promise by calling <code>new Promise(thenable)</code>. At the time of writing, it's recommended you use a promise shim.
+</p>
+
+<h1>todo</h1>
+<ul>
+<li>document a _call function to call functions by name.</li>
+<li>document _wrapThenable, for use with new Promise().</li>
+<li>document _sherpa</li>
+</ul>
+	</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Sherpa - Simple HTTP RPC API</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+<div class="crumbs">
+	<a href="../">mjl</a> &gt;
+	<a class="last" href="./">sherpa</a>
+</div>
+
+<div class="tocbar">
+	<a class="active" href="./">Sherpa</a> |
+	<a href="specification/">Specification</a> |
+	<a href="sherpajs/">Sherpajs</a> |
+	<a href="implementations/">Implementations</a> |
+	<a href="why/">Why</a> |
+	<a href="faq/">FAQ</a> |
+	<a href="about/">About</a>
+</div>
+
+<h1 id="sherpa"><a href="#hello">Sherpa</a></h1>
+<p>
+Sherpa stands for <b>S</b>imple <b>H</b>TTP <b>RP</b>C <b>A</b>PI. It allows you to easily (trivially!) export server-side functions over HTTP, for use in your web application, much like JSON-RPC. Some features of Sherpa API's:
+</p>
+<ul>
+<li>Simple to create on server-side.</li>
+<li>Simple to use on client-side, especially using JavaScript.</li>
+<li>Self-describing: an API lists available functions and provides documentation.</li>
+</ul>
+
+<p>
+Example of consuming an API:
+</p>
+<code><pre>&lt;script src="https://sherpa.irias.nl/exampleapi/sherpa.js"&gt;
+&lt;script&gt;
+	window.exampleapi.requestCount()
+	.then(function(result) {
+		alert('Number of requests: '+result);
+	}, function(error) {
+		alert('Error: '+JSON.stringify(error));
+	});
+&lt;/script&gt;</pre></code>
+
+<h1 id="sherpaweb"><a href="#sherpaweb">Sherpaweb</a></h1>
+<p>
+<a href="https://bitbucket.org/mjl/sherpaweb/">Sherpaweb</a> is a simple web app that renders the documentation provided by Sherpa API's. Given a Sherpa API URL, sherpaweb will:
+</p>
+<ul>
+<li>Show you the API documentation.</li>
+<li>Let you call API functions with parameters you provide.</li>
+</ul>
+
+<p>
+A public sherpaweb instance is running at <a href="https://sherpa.irias.nl/">sherpa.irias.nl</a>. It will work with any Sherpa API that your browser has access to.
+</p>
+<p>
+Open <a href="https://sherpa.irias.nl/x/sherpa.irias.nl/exampleapi">sherpa.irias.nl/x/sherpa.irias.nl/exampleapi</a> to look at sherpaweb's builtin example API.
+</p>
+
+<h1 id="implementing-a-sherpa-api"><a href="#implementing-a-sherpa-api">Implementing a Sherpa API</a></h1>
+<p>
+It is easy:
+</p>
+<ol>
+<li>Implement the functions you want to export in your programming language of choice.</li>
+<li>Pick (or create) a Sherpa API server <a href="implementations/">implementation</a>.</li>
+</ol>
+<p>
+For a real-world usage example, see sherpaweb's <a href="https://bitbucket.org/mjl/sherpaweb/exampleapi.go">exampleapi.go</a>.
+</p>
+
+	</body>
+</html>
