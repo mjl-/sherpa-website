@@ -28,82 +28,82 @@
 Not really. REST API's take a data-centric approach. They try to model the data on URL's, and use HTTP methods to model operations. Sherpa API's take a function centric approach, just like JSON-RPC and (a longer time ago) XMLRPC. Sherpa API's takes away all the trouble of coming up with proper URL mappings, HTTP method mappings and header intricacies (typically simply ignored by REST API designers).
 </p>
 
-<h2 id="..."><a href="#...">API versioning</a></h2>
+<h2 id="versioninga"><a href="#versioning">How does Sherpa do API versioning?</a></h2>
 <p>
-Clients should check that they support the Sherpa protocol version specified in metaVersion. If a future Sherpa protocol is incompatible, it will probably be easiest to just use a new (additional) API endpoint to export your API functions using the new protocol.
+The version of Sherpa specification an API implements is supplied in the API descriptor (<i>sherpa.json</i>). A Sherpa API itself also has a version number, that is loosely interpreted as <i>major.minor.patch</i>. If you make incompatible changes to a Sherpa API, you should probably publish it under a new endpoint. Since implementing an API is very easy with Sherpa, this is a feasable approach.
+</p>
+<p>
+With REST, some people put a version number in the URLs. This is not really RESTful, it could mean a single object can have multiple URI's. This is usually the best approach in practice though. However, since REST API's are relatively time-consuming to write, you probably won't easily bump the version number.
 </p>
 
+<h2 id="documenting"><a href="#documenting">How do you document a Sherpa API?</a></h2>
 <p>
-You'll probably mostly increase the minor and patch version of the semantic version of your API. In practice, it is very hard to remove API functions or make backwards incompatible changes. This is usually done by either publishing a new API on a new endpoint, or by adding new methods (and possibly marking old ones as deprecated).
+Documentation is a strength of Sherpa API's. You simply provide a Sherpa function called <code>_docs</code> that returns a simple JSON document containing part structured documentation, part markdown. The tool sherpaweb, publicly available at <a href="https://sherpa.irias.nl/">sherpa.irias.nl</a> can fetch and return any documentation for you.
 </p>
 
-<h2 id="..."><a href="#...">Documentation</a></h2>
+<h2 id="caching"><a href="#caching">Does Sherpa cache responses?</a></h2>
 <p>
-...
+No, Sherpa does not. All client-side API calls will result in a HTTP request. An API is free to document that some function results can be cached by a client. But this is not built into Sherpa API's.
 </p>
 
-<h2 id="..."><a href="#...">Caching</a></h2>
+<h2 id="scalable"><a href="#scalable">So will Sherpa API's be scalable?</a></h2>
 <p>
-...
+Caching is a way to make web API's scalable. If Sherpa doesn't return cacheable response, how can you make scalable API's?
+</p>
+<p>
+Well, you use as many servers as you need to serve the HTTP requests. You can still do caching in your backend, which you are probably doing already if you have a web service that needs to be "scalable". So nothing new really.
 </p>
 
-<h2 id="..."><a href="#...">Testing</a></h2>
+<h2 id="filtering-sorting-paginating"><a href="#filtering-sorting-paginating">Does Sherpa provide a standard way to filter/sort/paginate data?</a></h2>
 <p>
-...
+No. Just like REST API's don't. Maybe Sherpa can prescribe useful mechanisms for these in the future. Right now, you explicitly need to pass such query parameters in the Sherpa API calls. At least that makes them implicit. As opposed to the easy-to-get-wrong query string parameters in most REST API's.
 </p>
 
-<h2 id="..."><a href="#...">Who is using Sherpa API's?</a></h2>
+<h2 id="error-messages"><a href="#error-messages">How do I model error messages in Sherpa?</a></h2>
 <p>
-...
+It's about time you start reading the specification! To summarize: A call results in a JSON body with either a <code>results</code>-field on success or an <code>error</code>-field on failure. The error field can be filled with an object with a human-readable error message in the <code>message</code> field, and an optional programmer-usable error code (a string) in the <code>code</code> field.
 </p>
 
-<h2 id="..."><a href="#...">Does Sherpa provide a standard way to filter/sort/paginate data?</a></h2>
+<h2 id="multicall"><a href="#multicall">Can I call multiple Sherpa function in a single HTTP request?</a></h2>
 <p>
-...
+Not yet. It's on the to do list. Help us!
 </p>
 
-<h2 id="..."><a href="#...">How do I model error messages in Sherpa?</a></h2>
+<h2 id="server-sent-events-or-websockets"><a href="#server-sent-events-or-websockets">Does Sherpa support server-sent events or websockets?</a></h2>
 <p>
-...
+Not yet. For now it's best to create separate HTTP endpoints for such services. You can still document them with Sherpa. Perhaps in the future it'll be part of Sherpa, but they may stay too dissimilar to normal remote procedure calling.
 </p>
 
-<h2 id="..."><a href="#...">Can I call multiple Sherpa function in a single HTTP request?</a></h2>
+<h2 id="restful-endpoints"><a href="#restful-endpoints">Can I still use RESTful endpoints when using Sherpa?</a></h2>
 <p>
-todo: Support for executing multiple function calls in a single HTTP POST to the API endpoint has not yet been implemented. This will probably be implemented soon.
+Absolutely! In fact, there are two good reasons to use old-fashioned RESTful endponts:
+</p>
+<ul>
+<li>You really truly need the response to be cacheable.</li>
+<li>Browsers will send requests themselves, e.g. for images from an <code>img</code> tag.</li>
+</ul>
+
+<h2 id="authentication"><a href="#authentication">Does Sherpa provide an authentication mechanism?</a></h2>
+<p>
+No. You could use JSON web tokens. Or even HTTP basic/digest auth (over HTTPS). Authentication is too broad a subject to put into Sherpa.
 </p>
 
-<h2 id="..."><a href="#...">Does Sherpa support server-sent events or websockets?</a></h2>
+<h2 id="jsonp"><a href="#jsonp">Does Sherpa support JSONP?</a></h2>
 <p>
-sse: Should talk about this. Maybe we can use the call-json-object to start an SSE-request, and then either do plain json responses, or sherpa-response-objects for each object.
-</p>
-<p>
-websockets: talk about web sockets. not really interested in this right now. i prefer looking at server-sent events.
+JSONP calls are not yet supported. There is no reason is cannot be supported though, so a scheme will probably be designed when the need arises. Or maybe you'll beat me to it. (;
 </p>
 
-<h2 id="..."><a href="#...">Can I still use RESTful endpoints when using Sherpa?</a></h2>
+<h2 id="file-uploads"><a href="#file-uploads">How should I implement file uploads?</a></h2>
 <p>
-...
+This will probably come soon. It isn't in Sherpa yet though.
 </p>
 
-<h2 id="..."><a href="#...">Does Sherpa provide an authentication mechanism?</a></h2>
+<h2 id="data-types"><a href="#data-types">Why aren't parameter and return types part of function signatures?</a></h2>
 <p>
-...
+First, dynamic languages don't need or even use types. Requiring type specification could become too much of a burden.
 </p>
-
-<h2 id="..."><a href="#...">Does Sherpa support JSONP?</a></h2>
 <p>
-JSONP calls are not yet supported. There is no reason is cannot be supported though, so a scheme will probably be designed when the need arises or you beat me to it.
+Second, the Sherpa specification, and its implementations, would become much more complicated. Probably so much that isn't worth the trouble.
 </p>
-
-<h2 id="..."><a href="#...">How should I implement file uploads?</a></h2>
-<p>
-Sherpa was designed for the web. How does it deal with file uploads? xxx to do.
-</p>
-
-<h2 id="..."><a href="#...">Why aren't parameter and return types part of function signatures?</a></h2>
-<p>
-...
-</p>
-
 	</body>
 </html>

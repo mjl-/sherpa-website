@@ -22,16 +22,35 @@
 	<a href="../about/">About</a>
 </div>
 
-<h1 id="specification">Specification</h1>
+<div class="warning">
+This is work in progress!
+</div>
+
+<h1 id="specification"><a href="#specification">Specification</a></h1>
 
 <p>
-<strong>
-WARNING: This specification is work in progress and will probably change.
-</strong>
+A Sherpa API is provided at a URL, for example <code>https://sherpa.irias.nl/exampleapi/</code>.
+Sherpa API's are designed to be easy to implement and easy to use. A Sherpa API is usually implemented using a library, but writing Sherpa support directly into your application is also a viable option. This document describes how Sherpa API's work and what you must do to implement a Sherpa API.
 </p>
 
 <p>
-A Sherpa API is provided at a certain URL, for example <code>https://sherpa.irias.nl/exampleapi/</code>.  The API describes itself by a JSON file at <a href="https://sherpa.irias.nl/exampleapi/sherpa.json">https://sherpa.irias.nl/exampleapi/sherpa.json</a> Try opening it. It provides a document like the following.
+Sherpa API's summarized:
+</p>
+<ul>
+	<li>The API describes its title, version, list of available functions in a JSON document.</li>
+	<li>The API provides a very simple JavaScript library that you can include from a web application.</li>
+	<li>An API function is called by a HTTP POST to a path named after the function call. Parameters and results are encoded as JSON. Errors are encoded in a standard format.</li>
+	<li>The API provides documentation through a function with the fixed name <code>_docs</code>. It returns the documentation in JSON format, containing markdown.</li>
+</ul>
+
+<p>
+This specification continues with the URL endpoints a Sherpa API must implement. We use sherpaweb's "Example API" as an example: <code>https://sherpa.irias.nl/exampleapi/</code>.
+</p>
+
+<h2 id="get-sherpa-json"><a href="#get-sherpa-json">GET <code>&lt;URL&gt;/sherpa.json</code></a></h2>
+
+<p>
+An API describes itself by a JSON file at called <a href="https://sherpa.irias.nl/exampleapi/sherpa.json"><i>sherpa.json</i></a>. Try opening it. It provides a document like the following.
 </p>
 
 <code><pre>
@@ -49,24 +68,10 @@ A Sherpa API is provided at a certain URL, for example <code>https://sherpa.iria
 </pre></code>
 
 <p>
-A Sherpa API must provide the endpoints described below.
+A GET on the API URL must return a JSON document (as shown above). All fields are required and must not be <code>null</code>.
 </p>
 
-<p>
-The HTTP responses must include a CORS-header allowing access. This means they must also support the OPTIONS HTTP method.
-</p>
-
-<p>
-All data in Sherpa is UTF-8. This includes JSON request and response bodies, and JavaScript. Sherpa does not look at "Content-Type" headers for character set information.
-</p>
-
-<h2>GET <code>&lt;URL&gt;/sherpa.json</code></h2>
-
-<p>
-A GET on the API URL must return a JSON document (as shown above). All fields are required.
-</p>
-
-<table>
+<table class="table-jsondescr">
 	<thead>
 		<tr>
 			<th>Field</th>
@@ -76,74 +81,95 @@ A GET on the API URL must return a JSON document (as shown above). All fields ar
 	</thead>
 	<tbody>
 		<tr>
-			<td>id</td>
-			<td>string</td>
-			<td>Short ID for this API. The JavaScript library stores the API object in a global variable with this name.</td>
+			<td><code>id</code></td>
+			<td><i>string</i></td>
+			<td>Short ID for this API. The JavaScript library stores the API object in a global variable with this name. Must match regular expression <i>"[a-zA-Z][a-zA-Z0-9_]+"</i></td>
 		</tr>
 		<tr>
-			<td>title</td>
-			<td>string</td>
+			<td><code>title</code></td>
+			<td><i>string</i></td>
 			<td>Full human-readable name of this API.</td>
 		</tr>
 		<tr>
-			<td>version</td>
-			<td>string</td>
-			<td>Descriptive version string. Could be in the form of major.minor.patch. But a single API endpoint should not really have different "major" versions at different times. Incompatible API versions are best deployed at a new endpoint.</td>
+			<td><code>version</code></td>
+			<td><i>string</i></td>
+			<td>Descriptive version string. Could be in the form of <i>major.minor.patch</i>. But a single API endpoint should not really have different "major" versions at different times. Incompatible API versions are best deployed at a new endpoint.</td>
 		</tr>
 		<tr>
-			<td>sherpaVersion</td>
-			<td>int</td>
-			<td>Version of the Sherpa specification. The current version while work in progress is 0. In the future, backwards compatible changes (e.g. adding fields to the JSON object describing the API) may be made without increasing the version number. For incompatible changes, the version number will be increased. If a client library loads a Sherpa API with a new version number, it must generate an error.</td>
+			<td><code>sherpaVersion</code></td>
+			<td><i>int</i></td>
+			<td>Version of the Sherpa specification. This specification is still work in progress, that's why it is still at version <code>0</code>. In the future, backwards compatible changes (e.g. adding fields to the JSON object describing the API) may be made without increasing the version number. For incompatible changes, the version number will be increased. If a client library loads a Sherpa API with a version number is does not support (either too old or too new), it must generate an error.</td>
 		</tr>
 		<tr>
-			<td>baseurl</td>
-			<td>string</td>
+			<td><code>baseurl</code></td>
+			<td><i>string</i></td>
 			<td>URL for this API.</td>
 		</tr>
 		<tr>
-			<td>functions</td>
-			<td>array of string</td>
-			<td>List of methods exported by the API. Parameter types and return types are not part of the API. Requiring specification of such types would make the API significantly more complex and much harder to keep programming language-independent.</td>
+			<td><code>functions</code></td>
+			<td><i>array of string</i></td>
+			<td>List of methods exported by the API. Parameter types and return types are not part of the API. Requiring specification of such types would make the API significantly more complex and much harder to keep programming language-independent. Most scripting languages would not make use of it anyway. The parameter and return value types should be specificied in the API documentation. Function names must match regular expression <i>"[a-zA-Z_][a-zA-Z0-9_]+"</i>, though functions starting with an underscore have special meaning as described later.</td>
 		</tr>
 	</tbody>
 </table>
 
-<h2>GET <code>&lt;URL&gt;/sherpa.js</code></h2>
+<h2 id="get-sherpa-js"><a href="#get-sherpa-js">GET <code>&lt;URL&gt;/sherpa.js</code></a></h2>
 
 <p>
-This JavaScript file makes it trivial for people to start using your API.
+This JavaScript library makes it trivial for frontend developers to start using a Sherpa API.
 </p>
 <p>
-The JavaScript file must set a global variable with the name of the "id" field in the API-describing JSON document. This variable must be an object providing all functions exported by the API. Calling such a function from JavaScript must return a "thenable" (an object with the <code>"function then(resolved, rejected) {...}"</code>). <code>Resolved</code> will be called with the result of a successful API call. <code>Rejected</code> will be called with an error object if the call failed.  Error objects are described later in this document.
-</p>
-
-<h2>POST <code>&lt;URL&gt;/<i>functionName</i></code></h2>
-
-<p>
-A POST is used to call a function.  The body must be a JSON document with a <code>params</code> field, an array with parameters. An example:
-</p>
-
-<code><pre>{
-	"params": [
-		"something",
-		"else"
-	]
-}</pre></code>
-
-<p>
-The response is again a JSON document with fields <code>result</code> and <code>error</code>. A response must have at least one of those fields. Both can be present, but then one of these fields must be <code>null</code>.
+This library must set a global variable with the name of the <i>"id"</i> field from <i>sherpa.json</i>. This variable must be an object providing all functions exported by the API. Calling such a function from JavaScript must return a "thenable": an object with an attribute called <code>then</code> that has the signature <code>"function(resolved,&nbsp;rejected)&nbsp;{...}"</code>. <code>Resolved</code> will be called with the result of a successful API call. <code>Rejected</code> will be called with an error object if the call failed.  Error objects are described later in this document.
 </p>
 
 <p>
-On success, the <code>result</code> field contains the success response. The value can be any valid JSON type, e.g. boolean, an array, an object, etc. The value of field "result" is passed as argument to the resolved function in the JavaScript library.  An example:
+The thenable-objects can be transformed by setting the attribute <code>_wrapThenable</code> on the API object. By default, this is a function returning its parameter. Frontend developers may set this to a function that calls <code>new Promise(thenable)</code>, for full promise-support.
+</p>
+
+<p>
+The API object has a field <code>_sherpa</code>, containing the JSON document from <i>sherpa.json</i>.
+</p>
+
+<p>
+The API object also provides a function <code>_call</code>. Its first parameter should be the function name to call, the remaining will be parameters used in the Sherpa API call.
+</p>
+
+
+<h2 id="post-function"><a href="#post-function">POST <code>&lt;URL&gt;/<i>functionName</i></code></a></h2>
+
+<p>
+A HTTP POST to the API URL followed by the function name calls that function.  The request body must be a JSON document with a <code>params</code> field, an array with parameters. An example:
 </p>
 
 <code><pre>{
-    "result": ["some", "result"]
+    "params": [
+	"test",
+	123
+    ]
 }</pre></code>
 
 <p>
-On error, the <code>error</code> field contains an error object. An error object in turn contains two fields: <code>message</code> and <code>code</code>. Field <code>message</code> is required. It should be a human-readable error message.  Field <code>code</code> is optional, can be null, but should be a string indicating the type of error. Programmers can write error-handling code that looks at the type of error. API's should document the error codes they can emit, and their semantics. An example error response:
+The response is again a JSON document with fields <code>result</code> and/or <code>error</code>. A response must have at least one of those fields. Both can be present, but then one of them must be <code>null</code>.
+</p>
+
+<p>
+On success, the <code>result</code> field contains the function return value. This value can be any valid JSON type, e.g. boolean, an array, an object, etc. The value of field "result" is passed as argument to the <i>resolved</i> function in the JavaScript library.  An example:
+</p>
+
+<code><pre>{
+    "result": ["limited", "imagination"]
+}</pre></code>
+
+<p>
+On error, the <code>error</code> field contains an error object. An error object in turn contains two fields, both strings:
+</p>
+
+<ul>
+<li><code>message</code>, required. It should be a human-readable error message.</li>
+<li><code>code</code>, optional, can be null, but should be a string indicating the type of error. Programmers can write error-handling code that looks at this for the kind of error. API's should document the error codes they can emit, and their semantics.</li>
+</ul>
+<p>
+An example error response:
 </p>
 
 <code><pre>{
@@ -153,9 +179,13 @@ On error, the <code>error</code> field contains an error object. An error object
     }
 }</pre></code>
 
-<h3>Notes on POST</h3>
 <p>
-The reason the function name is part of the URL and not part of the JSON body is purely convenience for web developers. With this scheme, it is easy to see which functions are being called in browser developer consoles showing HTTP requests. In an early draft of Sherpa, the function name was part of the JSON body in the request.
+For forward compatibility, Sherpa API developers should not provide function names starting with an underscore other than those specified in this document.
+</p>
+
+<h3 id="notes-on-post"><a href="#notes-on-post">Notes on POST</a></h3>
+<p>
+The reason the function name is part of the URL and not part of the JSON body is purely convenience for web developers. With this scheme, it is easy to see which functions are being called in browser developer consoles that show HTTP requests. In an early draft of this specification, the function name was part of the JSON request body.
 </p>
 
 <p>
@@ -163,28 +193,25 @@ Error messages should start with a lower case letter and not end with a dot. Thi
 </p>
 
 <p>
-HTTP status codes are not used to indicate success or failure. The POST should always return a status 200 "OK", even in case of an error. The exeption is if the function name does not exist. In that case, the HTTP status should be 404 "File not Found". The rationale is that if an API disappears, or a programmer used an incorrect API URL, function calls would return status 404 as well, so Sherpa libraries should expect and gracefully handle 404's anyway.
+HTTP status codes are not used to indicate success or failure. The POST should almost always return a status 200 "OK", so even if the function called returned an error. The exception is if the function name does not exist. In that case, the HTTP status should be 404 "File not Found". The rationale is that if an API disappears, or a programmer used an incorrect API URL, function calls would return status 404 as well, so Sherpa libraries should expect and gracefully handle 404's.
 </p>
 
-<h2 id="error-codes"><a href="#error-codes">Error codes</a></h2>
+<h3 id="error-codes"><a href="#error-codes">Error codes</a></h3>
 <p>
-Sherpa also defines several commonly used error codes:
+Sherpa defines several commonly used error codes, all starting with "sherpa":
 </p>
 <dl>
-	<dt>httpError</dt>
-	<dd>An HTTP-level error occurred.</dd>
+	<dt>sherpaHttpError</dt>
+	<dd>Unexpected HTTP-level error occurred, like incorrect HTTP response status code (i.e. not 200 and not 404).</dd>
 
 	<dt>sherpaBadFunction</dt>
-	<dd>Method does not exist in this API. This might be returned by the server, of generated by the client library code.</dd>
+	<dd>Function does not exist in this API. This might be returned by the server, or generated by the client library code.</dd>
 
 	<dt>sherpaBadRequest</dt>
 	<dd>Bad request body. Invalid JSON, or missing "params"-field.</dd>
 
 	<dt>sherpaBadParams</dt>
-	<dd>Method was not called with the correct number/type of parameters.</dd>
-
-	<dt>sherpaHttpError</dt>
-	<dd>The HTTP response status code indicated failure (everything except 200 and 404).</dd>
+	<dd>Function was not called with the correct number/type of parameters.</dd>
 
 	<dt>sherpaBadResponse</dt>
 	<dd>The HTTP response status code indicated success, but the response could not be parsed (e.g. malformed JSON in the body).</dd>
@@ -197,14 +224,32 @@ Sherpa also defines several commonly used error codes:
 </dl>
 
 
-<h2>GET <code>&lt;URL&gt;/</code></h2>
+<h2 id="get-slash"><a href="#get-slash">GET <code>&lt;URL&gt;/</code></a></h2>
 <p>
-A GET on the Sherpa API base URL can optionally provide useful information about the API. A typical, though optional response is to redirect to a sherpaweb instance serving documentation for the API.
+A GET on the Sherpa API base URL can optionally provide useful information about the API. A typical response, though optional, is to show a minimal page explaining this is a Sherpa API, has the JavaScript API loaded for quick experimentation, followed by a link to the documentation and more information about Sherpa in general.
 </p>
 
-<h1 id="documentation">Documentation</h1>
 <p>
-A Sherpa API provides documentation through the function <code>_docs</code>. It is a function like any other, returning a JSON document as the result. Sherpaweb renders this document. The documentation must adhere to a simple format.  The object is a toplevel "documentation"-object, that looks like this:
+See sherpaweb's exampleapi: <a href="https://sherpa.irias.nl/exampleapi/">sherpa.irias.nl/exampleapi/</a>.
+</p>
+
+<h1 id="notes"><a href="#notes">Notes</a></h1>
+
+<p>
+The endpoints above are all that is needed to implement a Sherpa API. This section lists additional requirements.
+</p>
+
+<p>
+The HTTP responses must include CORS-headers allowing use from other domains. This means the HTTP OPTIONS method must also be supported.
+</p>
+
+<p>
+All data in Sherpa is UTF-8. This includes JSON request and response bodies, and JavaScript. To keep implementations simple, sherpa does not look at "Content-Type" headers for character set information.
+</p>
+
+<h1 id="documentation"><a href="#documentation">Documentation</a></h1>
+<p>
+A Sherpa API provides documentation through the function <code>_docs</code>. It is a function like any other and as such can be called through a HTTP POST. The result is a JSON document that must adhere to a simple format. Sherpaweb renders this document.  The object is a toplevel "documentation"-object, that looks like this:
 </p>
 
 <code><pre>{
@@ -213,46 +258,43 @@ A Sherpa API provides documentation through the function <code>_docs</code>. It 
     "functions": [
         {
             "name": "requestCount",
-            "text": "Documentation for this function, as markdown.",
+            "text": "requestCount(): int\n\nReturn the number of times this function has been called since this API was last restarted.",
         },
         ...
     ],
     "sections": [
-       ... a nested "documentation"-object,
-       ...
+       ... nested "documentation"-objects ...
     ]
 }</pre></code>
 
 <p>
-Documentation can be hierarchically arranged. With a top-level documentation object introducing the API. And further topics divided in sections, each with their applicable functions.
+Documentation can be hierarchically arranged. With a top-level documentation object introducing the API. And further topics divided in sections, each with their functions.  The full list of provided functions must be specified in <i>sherpa.json</i>. The documentation provides functions explicitly so tools like sherpaweb can place the functions in the right section and provide functionality to call a function.
 </p>
 
 <p>
-Because the main text is markdown, you can easily create structure, or even include HTML for richer documentation.
+Both the main <code>text</code> and function <code>text</code> fields should be markdown. This allows you to easily create structure, or even include HTML for richer documentation.
 </p>
 
 <p>
-The <code>text</code>-field in a "function"-object should start with a line containing the function signature, showcasing its parameters and their types, and the return type.
+The <code>text</code>-field in a "function"-object should start with a line containing the function signature, showing its parameters with types, and the return type (in free-form).
 </p>
 
 
-<h1>todo</h1>
+<h1 id="future-development"><a href="#future-development">Future development</a></h1>
 <p>
-Some things that could happen in the future:
+Some things that will probably happen soon:
 </p>
 <ul>
-<li>Put limits on valid function names. a-zA-Z0-9_, i.e. whatever is a valid identifier in most languages.</li>
-<li>Document that functions starting with a _ are special and should not normally be created. The JS lib uses _call to let you call a arbitrary functions by name. In the future, we will probably have _multicall.</li>
-<li>Multicall support, JSONP support.</li>
-<li>Describe the JS library in more detail.</li>
+<li>Multicall support</li>
+<li>JSONP support</li>
+<li>Support for uploading files</li>
 </ul>
 
-<h1>Future development</h1>
 <p>
 Things not planned yet, but that may happen in the future.
 </p>
 <ul>
-<li>Provide more structure for documentation. Such as explicit structure for function signatures, possible error codes.</li>
+<li>Provide more structure for documentation. Such as explicit structure for function signatures, error codes.</li>
 </ul>
 	</body>
 </html>

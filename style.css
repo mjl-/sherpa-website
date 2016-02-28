@@ -8,8 +8,8 @@
 
 body	{ font-size:16px; }
 a { color: #327CCB; }
-h1 a, h2 a	{ color: black; text-decoration: none; }
-h1 a:hover, h2 a:hover	{ color: #327CCB; }
+h1 a, h2 a, h3 a	{ color: black; text-decoration: none; }
+h1 a:hover, h2 a:hover, h3 a:hover	{ color: #327CCB; }
 h1	{ font-size: 1.3em; margin-top:3.5ex; margin-bottom:1ex; }
 h2	{ font-size: 1.1em; margin-top:2.5ex; margin-bottom:0.67ex; }
 h3,h4,h5,h6	{ font-size: 1.0em; margin-top:1ex; margin-bottom:0.33ex; }
@@ -31,3 +31,6 @@ dd	{ margin-bottom:1ex; }
 .tocbar		{ text-align:center; margin-top:2ex; color:#ccc; }
 .tocbar a	{ padding:0 0.25em; }
 .tocbar .active	{ font-weight:bold; }
+
+.warning	{ margin-top:2em; padding:1em; border:1px solid red; }
+.table-jsondescr td	{ padding-left:0.5em; padding-right:0.5em; vertical-align:top; }
