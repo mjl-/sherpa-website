@@ -36,7 +36,7 @@ Sherpa stands for <b>S</b>imple <b>H</b>TTP <b>RP</b>C <b>A</b>PI. It allows you
 </ul>
 
 <p>
-Example of consuming an API:
+Sherpa API's provide a little bit of JavaScript glue that make it extremely easy to start using them. An example:
 </p>
 <code><pre>&lt;script src="https://sherpa.irias.nl/exampleapi/sherpa.js"&gt;
 &lt;script&gt;
@@ -58,6 +58,10 @@ Example of consuming an API:
 </ul>
 
 <p>
+Discovering the functionality of an API was never this easy.
+</p>
+
+<p>
 A public sherpaweb instance is running at <a href="https://sherpa.irias.nl/">sherpa.irias.nl</a>. It will work with any Sherpa API that your browser has access to.
 </p>
 <p>
@@ -66,14 +70,14 @@ Open <a href="https://sherpa.irias.nl/x/sherpa.irias.nl/exampleapi/">sherpa.iria
 
 <h1 id="implementing-a-sherpa-api"><a href="#implementing-a-sherpa-api">Implementing a Sherpa API</a></h1>
 <p>
-It is easy:
+Is easy:
 </p>
 <ol>
 <li>Implement the functions you want to export in your programming language of choice.</li>
 <li>Pick (or create) a Sherpa API server <a href="implementations/">implementation</a>.</li>
 </ol>
 <p>
-For a real-world usage example, see sherpaweb's <a href="https://bitbucket.org/mjl/sherpaweb/src/default/exampleapi/exampleapi.go?at=default&fileviewer=file-view-default">exampleapi.go</a>.
+For a real-world usage example, see sherpaweb's <a href="https://bitbucket.org/mjl/sherpaweb/src/default/exampleapi/exampleapi.go?fileviewer=file-view-default">exampleapi.go</a>.  The API documentation is written as Go comments, just like you would normally write comments for your code. The sherpa library for Go comes with a tool called sherpadocs that will turn those comments into a JSON file suitable for use as API documentation. This makes it effortless to write and publish documentation for your API's.
 </p>
 
 	</body>
