@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
 		<title>Why - Sherpa</title>
 		<link rel="stylesheet" href="../style.css" />
 	</head>
@@ -13,98 +14,130 @@
 </div>
 
 <div class="tocbar">
-	<a href="../">Sherpa</a> |
+	<a href="../">Intro</a> |
+	<a href="../apidocs/">API documentation</a> |
+	<a href="../sherpajs/">sherpa.js</a> |
+	<a href="../implementations/">Libraries</a> |
 	<a href="../specification/">Specification</a> |
-	<a href="../sherpajs/">Sherpajs</a> |
-	<a href="../implementations/">Implementations</a> |
 	<a class="active" href="../why/">Why</a> |
-	<a href="../faq/">FAQ</a> |
-	<a href="../about/">About</a>
+	<a href="../faq/">FAQ</a>
 </div>
 
 <h1 id="why-sherpa"><a href="#why-sherpa">Why Sherpa?</a></h1>
 <p>
-To summarize: Sherpa lets you write and document API's for use on the web without unnecessary complexity.
+One word: Simplicity.
 </p>
+
 <p>
-As opposed to REST API's, where too much time is spend on designing, implementing and writing documentation for API's. REST API's introduce a lot of complexity. Tools have been created to make working with them less painful. Many books have been written about properly implementing REST API's! It isn't easy. So it's time to rethink this and get rid of all the complexity.
+Sherpa gets rid of a lot of dead weight. Let me explain.
 </p>
+
+<h2>Writing a Sherpa API</h2>
 <p>
-REST API's are data-oriented (in theory, not so much in practice), Sherpa API's are function-oriented. Just like XMLRPC and JSON-RPC. But Sherpa API's have two main advantages:
+Consider writing a Sherpa API:  You just write functions you want to export from your API.  Then you simply call those functions from JavaScript. No need to write a client library: it's automatic.  Documentation? Just write comments or annotations in your code and you have API documentation!  You also automatically get a playground to try the API functions.
+</p>
+
+<h2>Writing a REST API</h2>
+<p>
+REST API's are a popular option for making web API's. I've created plenty myself. It's goes a little like this: Specify data model, find a way to map the data onto URLs (you'll have to shoehorn it, it's never quite the natural fit). Next: determine what all the HTTP stuff is supposed to do on your URLs:
+</p>
+<ol>
+<li>methods,</li>
+<li>headers (authorization, caching, content negotiation, and all combinations thereof),</li>
+<li>query string parameters (most REST API's ignore unrecognized parameters, not so great for functions in an API),</li>
+<li>what request bodies should look like,</li>
+<li>what the response statuses could be,</li>
+<li>which response headers can be set,</li>
+<li>the structure of response bodies.</li>
+</ol
+<p>
+Then you need to implement all this (be sure to get all the details right!). And you need to write documentation, explaining how all HTTP parameters affect the URLs. You'll need help from some tool to generate pretty HTML, and try hard to keep documentation up to date with the code.
+</p>
+
+<p>
+I'll summarize: lots of time spent on little.  It's because REST is pretending to be modelling data (but not actually helping you with that!), while it is really just a very complex and crappy RPC mechanism.  No more! Let's stop pretending and get rid of that needless complexity!
+</p>
+
+<h2>Aren't there better web API mechanisms?</h2>
+<p>
+Sherpa API's are function-oriented. Similar to JSON-RPC. But Sherpa API's have two main advantages. See below.  There are older and other mechanisms like XMLRPC (you don't want XML in your web app), and SOAP (XML and also complicated on its own), and gRPC (can't call it from your browser). Sherpa's advantages:
 </p>
 <ul>
 <li>Documentation is built-in. You don't need separate tools to provide documentation.</li>
-<li>Sherpa API's automatically provide a tiny JavaScript library, making it trivial to get started with an API.</li>
+<li>Sherpa API's automatically provide a tiny JavaScript library, making it trivial to get started with an API if you're making a web app.</li>
 </ul>
 <p>
-This is not revolutionary. It's just a protocol that had to be specified. That's why Sherpa was created.
+This is not revolutionary. It's just a simple mechanism that needed to be created.
 </p>
 
-<h1 id="why-not-rest"><a href="#why-not-rest">Why (not) to REST?</a></h1>
+<h1 id="why-not-rest"><a href="#why-not-rest">When to REST?</a></h1>
 
 <p>
-So what is so bad about REST API's? Well, it's not bad per se. It's only bad in the sense that unnecessary complexity is bad.
-</p>
-<p>
-There are two reasons why you would still use RESTful API's:
+Unfortunately, REST is often used when these are not needed, making API's much more complicated and undocumented and undiscoverable than necessary. But, REST is useful in a few situations:
 </p>
 <ul>
 <li>You need HTTP caching.</li>
 <li>Browsers will requests resources themselves.</li>
 </ul>
 
+
 <h2 id="caching"><a href="#caching">Caching</a></h2>
 <p>
-One of the main features of REST API's is cachability of responses. This results in scalability. This is indeed great. However, in practice, you'll often disable caching of almost all of your endpoints. You do this to prevent your frontend app from displaying stale data. Only if you have explicitly designed endpoints for caching, should you enable it (by setting the right headers).  Likewise, if you really need cacheable responses, create an endpoint outside of the Sherpa API.
+One of the main features of REST API's is cachability of responses. This allows for scalability: fewer requests at the server. This is indeed great. However, in practice, for most REST endpoints you'll disable caching. You do this to prevent your web app from displaying stale data. Only if you have explicitly designed endpoints for caching, should you enable it (by setting the right headers).  So, for the cases where you really need cacheable responses, create an endpoint outside of the Sherpa API.
 </p>
 
 <h2 id="browsers-sending-requests"><a href="#browsers-sending-request">Browsers sending requests</a></h2>
 <p>
-With RESTful API's, you can have endpoints that return images. Very practical, because it allows you to use a simple HTML <code>img</code> tag to display such images. If you need such endpoints, where you really are not doing a remote procedure call, create them outside of the Sherpa API.
+With RESTful API's, you can have endpoints that return images. Very practical, because it allows you to use a simple HTML <code>img</code> tag to display such images. If you need such endpoints &mdash; so when you not really doing a remote procedure call &mdash; create them outside of the Sherpa API.
 </p>
 
+
+
+<h1>What is so complicated about REST?</h1>
 <p>
-But in many respects, REST API's are more complicated than necessary. Let's look at some of them.
+REST appears to have some magical properties. Nearly everyone is enchanted by REST. <i>"REST is good"</i>, seems to be the consensus. Don't you see the complexities? Let's have a look.
 </p>
 
 
 <h2 id="mapping-urls-to-functions"><a href="#mapping-urls-to-functions">Mapping URL's to functions</a></h2>
 <p>
-It's often ambiguous how your data domain should be mapped to URL's.  Should it be <code>/api/v1/user/:id</code>, or should it be <code>/api/v1/group/:id/user/:id</code>? It depends. With a RESTful implementation, you'll usually map such URL templates to a function that is called as a HTTP request handler. With Sherpa, the URL-mapping part is simply not there, it's just the function that you cared about. Simpler.
+It's often ambiguous how your data domain should be mapped to URL's.  Should it be <code>/api/v1/user/:id</code>, or should it be <code>/api/v1/group/:id/user/:id</code>? It depends.</p>
+<p>
+In the actual implementation of your REST endpoints, you'll usually map such URL templates to a function. That function is then called when a HTTP request comes in matching that URL pattern. With Sherpa, the URL-mapping part is simply not there, it's just the function name that you cared about. Simpler. Better.
 </p>
 
 <h2 id="http-is-too-cool"><a href="#http-is-too-cool">HTTP is too cool</a></h2>
 <p>
-RESTful-fans seem to think HTTP must be used to its fullest extent. First, HTTP is cool because it has been great for the internet. Second, HTTP also has plenty of flaws, is quite complex, and has features that don't really work nicely with eachother. "Using HTTP" gives a false impression of compliance. Does your REST API handle <code>If-Modified-Since</code> headers properly? Is it prepared to handle one of the many other headers HTTP clients might throw at it? Sherpa simply skips all that complexity.
+RESTful-fans seem to think HTTP must be used to its fullest extent. First, granted HTTP has been great for the internet. Second, HTTP also has plenty of flaws, is quite complex, and has features that don't really work nicely with eachother. "Using HTTP" gives a false impression of compliance. Does your REST API handle <code>Accept</code> or <code>If-Modified-Since</code> headers properly? Is it prepared to handle one of the many other headers that HTTP clients might throw at it? Probably not. Sherpa simply skips nearly all that complexity. Simpler. Better.
 </p>
 
 <h2 id="http-methods-and-status-codes"><a href="#http-methods-and-status-codes">HTTP methods and status codes</a></h2>
 <p>
-Part of designing REST API's involves specifying the semantics the various HTTP methods have on your endpoints. Some HTTP methods might not be supported, you have to document that. The same goes for HTTP status codes. You have to specify which you're going to send. It's usually semi-standard among REST API's, but implementations don't all go to same (proper) lengths to respond with the "right" HTTP status codes.
+Part of designing REST API's involves specifying the semantics the various HTTP methods have on your endpoints. Some HTTP methods might not be supported, you have to document that. The same goes for HTTP status codes. You have to specify which you're going to send. It's usually semi-standard among REST API's, but implementations don't all go to same (proper &amp; complicated) lengths to respond with the "right" HTTP status codes.
 </p>
 <p>
-So what should a client library do when it receives a status "200" for creating an object with a POST (where "201" would be expected)? Is that an error from the API? Should the client library take that as a sign the object already existed? HTTP status codes for RESTful operations often confuse more than they clarify.
+What should a client library do when it receives a status "200" for creating an object with a POST (where "201" would be expected)? Is that an error from the API? Should the client library take that as a sign the object already existed? HTTP status codes for RESTful operations often confuse more than they clarify.  Sherpa simply uses HTTP as a transport, not caring for status codes. Simpler. Better.
 </p>
 
 <h2 id="http-post-for-other-stuff"><a href="#http-post-for-other-stuff">You're going to need HTTP POST for "other stuff"</a></h2>
 <p>
-REST API's all start with good intentions. Modelling the data structures on HTTP URL's (URI's to be correct) "feels right". However, sooner or later you need operations that are different from fetching (GET), creating (POST), modifying (PATCH), overwriting (PUT) and removing (DELETE). So you create a special endpoint to which the REST API consumer has to POST some JSON body. E.g. to <code>/api/v1/user/123/send-confirmation</code>. In practice, most of the stuff that makes your app interesting will be such POST calls.  With Sherpa, that's what you always use.
+REST API's all start with good intentions. Modelling the data structures on HTTP URL's (URI's to be correct) "feels right". However, sooner or later you need operations that are different from fetching (GET), creating (POST), modifying (PATCH), overwriting (PUT) and removing (DELETE). So you create a special endpoint to which the REST API consumer has to POST some JSON body. E.g. to <code>/api/v1/user/123/send-confirmation</code>. In practice, most of the stuff that makes your app interesting will be such POST calls.  With Sherpa, that's what you always use to call a remote function. Simpler. Better.
 </p>
 
 <h2 id="data-modelling-in-theory"><a href="#data-modelling-in-theory">Data modelling in theory, remote procedure calling in practice</a></h2>
 <p>
-With REST, you model your data as URL's. You'll probably return objects as JSON. But pretty soon you'll turn your endpoints into remote procedure calls.
+With REST, you think you're modelling your data as URL's. You'll probably return objects as JSON. But pretty soon you'll turn your endpoints into remote procedure calls. Don't believe? I'll explain.
 </p>
 <p>
-If you're building an app that must list tables full of data, you'll need pagination. You cannot just return all millions of objects when a client requests a (hypothetical) <code>imdb.com/api/movie</code>.  So you add query string parameters than handle pagination. And filtering. And sorting. So what is that endpoint representing? Not any data objects. It's just some sort of method for looking at data. And a pretty lousy one at that. You can put all kinds of parameters and hints in query string parameters, and headers. REST API's will usually ignore most of that stuff, until they don't...
+If you're building an app that must list tables full of data, you'll need pagination. You cannot just return all millions of objects when a client requests a (hypothetical) <code>imdb.com/api/movie</code>.  So you add query string parameters than handle pagination. And filtering. And sorting. So what is that endpoint representing? Not just data. It's just some sort of method for looking at data. And a pretty lousy one at that. You can put all kinds of parameters and hints in query string parameters, and headers. REST API's will usually ignore most of that stuff, until they don't...
 </p>
 <p>
-With Sherpa, you skip all that pretending, and realize you just want to call a few functions.
+With Sherpa, you skip all that pretending, and realize you just want to call remote functions. Simpler. Better.
 </p>
 
-<h2 id="discovering"><a href="#discovering">Discovering</a></h2>
+<h2 id="using"><a href="#using">Using REST API's</a></h2>
 <p>
-REST API's are not automatically discoverable. How would you list which endpoints exist?  With URL templates that include strings like "/:id/"?  How do you start using the API? Probably you'll start by just creating URL's in JavaScript and fetching data. E.g. with <code>jQuery.getJSON</code>. This works for a while. But pretty soon you'll want to automate some of that. And you'll write a client library for your specific REST API. Lots of wasted energy. With Sherpa, every API has a (JavaScript) client library automatically.
+REST API's are not easy to start using from JavaScript. How would you list which endpoints exist?  With URL templates that include strings like "/:id/"?  How do you start using the API? Probably you'll start by just creating URL's in JavaScript and fetching data. E.g. with <code>jQuery.getJSON</code>. This works for a while. But pretty soon you'll want to automate some of that. And you'll write a client library for your specific REST API. Lots of wasted energy. With Sherpa, every API has a (JavaScript) client library automatically. You just call functions from an API object. Simpler. Better.
 </p>
 
 <h2 id="documentation"><a href="#documentation">Documentation</a></h2>
@@ -113,13 +146,13 @@ REST API's are relatively hard to document. Each endpoint has multiple dimension
 </p>
 <ul>
 <li>Allowed methods, e.g. GET, PUT, PATCH, DELETE, POST</li>
-<li>HTTP headers that may (or may not) be treated as you would expect (e.g. content-type negotiation, conditional requests). This is often simply ignored by REST API implementors.</li>
-<li>Query string parameters. This is often used for filtering/sorting/paginating data. Typically, unrecognized query string parameters are simply ignored. This is quite unhelpful for web developers. Mistyping a query string parameter will typically still get some valid-looking response from an endpoint, just not what you as programmer expected.</li>
-<li>HTTP status codes. Which is your REST API using? Do you properly use "201" for created objects? Have you actually used the distinction between status "200", "201" and "204" in your client-side applications? In my experience, you "should" use the proper status codes, but apart from the "major" number (2xx, 3xx, 4xx, 5xxx), this is not used in an useful way.</li>
+<li>HTTP headers that may (or may not) be treated as you would expect (e.g. content-type negotiation, conditional requests). Note: this is often simply ignored by REST API implementors.</li>
+<li>Query string parameters. This is often used for filtering/sorting/paginating data. Typically, unrecognized query string parameters are simply ignored. This is quite unhelpful for web developers. Mistyping a query string parameter will usually still get some valid-looking response from an endpoint, just not what you as programmer expected.</li>
+<li>HTTP status codes. Which is your REST API using? Do you properly use "201" for created objects? Have you actually used the distinction between status "200", "201" and "204" in your client-side applications? In my experience these codes are not used in an meaningful way in practice (except for the major numbers: 4xx, 5xx.</li>
 <li>JSON bodies, both in requests and responses. There is no standard way to model error messages in "REST", so everyone makes something up.  In Sherpa, you only have to care about the JSON bodies, not all the other stuff above.</li>
 </ul>
 <p>
-So how do you actually document REST API's? Well, you might use RAML. Or Swagger. Most of the complexity of those tools is for specifying all the dimensions listed above. That's a lot of work for very little gain.
+So how do you actually document REST API's? Well, you might use RAML. Or Swagger. Most of the complexity of those tools is for specifying all the dimensions listed above. That's a lot of work for very little gain.  With Sherpa, you just write comments or annotations for your functions, and you automatically get live-rendered documentation. Simpler. Better.
 </p>
 
 <h2 id="linkability"><a href="#linkability">Linkability</a></h2>
@@ -127,7 +160,7 @@ So how do you actually document REST API's? Well, you might use RAML. Or Swagger
 One of the most important features of the "web" is linkability. Any page can link to any other page. It would be great if we could do the same with data. REST has a vague promise of doing that. And you can indeed write down a URL that represents some piece of data. Unfortunately, that doesn't say anything about the response formats that endpoint can return, or which additional query string parameters it understands (like for filtering or sorting). In practice, you cannot automatically do much with data from a REST API.
 </p>
 <p>
-Theoretical REST API's sometimes use URI's as "id" fields for objects. You could assume that URI would support a DELETE, PUT and PATCH method. In practice you don't automatically know the semantics of such calls.  Another problem with this kind of linkability is collections. Say you get a list of objects that point to (reference) other objects, by URI. How would you then efficiently fetch those objects? Simply do N GET requests, one for each unique URI? What if there are hunderds? That's why you will create REST API endpoints that will return objects for a whole bunch of "id"'s. And then you realize you've simply created a very eloborate and complex RPC mechanism.
+REST API's sometimes use URI's as "id" fields for objects. In theory, you could assume that URI would then support a DELETE, PUT and PATCH method. In practice, you wouldn't automatically know the semantics of such calls.  Another problem with this kind of linkability is collections. Say you get a list of objects that point to (reference) other objects, by URI. How would you then efficiently fetch those objects? Simply do N GET requests, one for each unique URI? What if there are hunderds? That's why you will create REST API endpoints that will return objects for a whole bunch of "id"'s. And then you realize you've simply created a (very complex) RPC mechanism. You don't have to learn this the time-consuming way. Just use Sherpa. Simpler. Better.
 </p>
 
 
@@ -136,14 +169,25 @@ Theoretical REST API's sometimes use URI's as "id" fields for objects. You could
 To keep it short:
 </p>
 <ul>
-<li>SOAP is really really bad. It has so many non-standardness in it, that each server implementation requires its own client implementation, just to work around all the quirks. It tries to do too much, like modelling data (parameters and return values). Avoid if at all possible.</li>
-<li>XMLRPC works quite well. It is XML-based, so probably never should have been created. But it does let you easily call remote procedures.</li>
+<li>SOAP is really really bad. It has so many non-standardness in it, that each server implementation requires its own client implementation, just to work around all the quirks. It tries to do too much, like modelling data (parameters and return values). In practice it never quite works. Avoid if at all possible.</li>
+<li>XMLRPC works quite well. No mechanism for documentation. Its XMLness is bad. But it does let you easily call remote procedures.</li>
 <li>JSON-RPC makes a lot of sense. A JSON-based remote procedure call mechanism. Unfortunately, just like XMLRPC, it does not provide a mechanism for API discovery and documentation, and it doesn't provide immediate JavaScript libraries for API's.</li>
 </ul>
 
-<h1 id="conclusion"><a href="#conclusion">Conclusion</a></h1>
 <p>
-Keep it simple. Realize most uses of "REST" are actually remote procedure calls. So use Sherpa for those calls. You'll benefit from API discovery, built-in documentation and immediate JavaScript libraries. Use REST when browsers are sending requests directly, or when your data must actually be cacheable.
+Luckily there is also:
+</p>
+<ul>
+<li>Sherpa: Simpler. Better.</li>
+</ul>
+
+<h1 id="conclusion"><a href="#conclusion">To conclude</a></h1>
+<p>
+Why Sherpa? Simpler. Better.
+</p>
+
+<p>
+Save yourself time, and realize most uses of "REST" are actually remote procedure calls. And that Sherpa is a better RPC mechanism. You'll benefit from API discovery, built-in documentation and immediate JavaScript libraries. Only use REST when browsers are sending requests directly, or when your data must actually be cacheable.
 </p>
 	</body>
 </html>

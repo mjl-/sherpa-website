@@ -2,83 +2,137 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>Sherpa - Simple HTTP RPC API</title>
+		<meta name="viewport" content="width=device-width" />
+		<title>sherpa - simple web api's for web apps</title>
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
 <div class="crumbs">
 	<a href="../">mjl</a> &gt;
-	<a class="last" href="./">sherpa</a>
+	<a class="last" href="./">sherpa intro</a>
 </div>
 
 <div class="tocbar">
-	<a class="active" href="./">Sherpa</a> |
+	<a class="active" href="./">Intro</a> |
+	<a href="apidocs/">API documentation</a> |
+	<a href="sherpajs/">sherpa.js</a> |
+	<a href="implementations/">Libraries</a> |
 	<a href="specification/">Specification</a> |
-	<a href="sherpajs/">Sherpajs</a> |
-	<a href="implementations/">Implementations</a> |
 	<a href="why/">Why</a> |
-	<a href="faq/">FAQ</a> |
-	<a href="about/">About</a>
+	<a href="faq/">FAQ</a>
 </div>
 
-<div class="warning">
-This is work in progress!
-</div>
+<h1 id="sherpa"><a href="#sherpa">Sherpa</a> - simple web api's for web apps</h1>
 
-<h1 id="sherpa"><a href="#sherpa">Sherpa</a></h1>
-<p>
-Sherpa stands for <b>S</b>imple <b>H</b>TTP <b>RP</b>C <b>A</b>PI. It allows you to easily (trivially!) export server-side functions over HTTP, for use in your web application, much like JSON-RPC. Some features of Sherpa API's:
-</p>
 <ul>
-<li>Simple to create on server-side.</li>
-<li>Simple to use on client-side, especially using JavaScript.</li>
-<li>Self-describing: an API lists available functions and provides documentation.</li>
+<li>Simple for backend developers: Just export functions you wrote using one of the small <a href="implementations/">libraries</a>.</li>
+<li>Simple for frontend developers: Just call a function and get a promise back, see <a href="sherpajs/">sherpa.js</a>.</li>
+<li>Simple for all developers: API's are self-describing and self-documenting, see <a href="apidocs/">API documentation</a>.</li>
 </ul>
 
-<p>
-Sherpa API's provide a little bit of JavaScript glue that make it extremely easy to start using them. An example:
-</p>
-<code><pre>&lt;script src="https://sherpa.irias.nl/exampleapi/sherpa.js"&gt;
+<h1 id="comparison">Comparison</h1>
+<table class="table-comparison">
+	<thead>
+		<tr>
+			<th></th>
+			<th style="padding:0 1rem">REST</th>
+			<th style="padding:0 1rem">JSON-RPC</th>
+			<th style="padding:0 1rem">gRPC</th>
+			<th style="padding:0 1rem">Sherpa</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="label">Maps naturally to backend code</td>
+			<td class="no">No</td>
+			<td class="yes">Yes</td>
+			<td class="yes">Yes</td>
+			<td class="yes">Yes</td>
+		</tr>
+		<tr>
+			<td class="label">Self-describing</td>
+			<td class="no">No</td>
+			<td class="no">No</td>
+			<td class="yes">Yes</td>
+			<td class="yes">Yes</td>
+		</tr>
+		<tr>
+			<td class="label">Includes documentation</td>
+			<td class="no">No</td>
+			<td class="no">No</td>
+			<td class="no">No</td>
+			<td class="yes">Yes</td>
+		</tr>
+		<tr>
+			<td class="label">Optimized for speed</td>
+			<td class="no">No</td>
+			<td class="no">No</td>
+			<td class="yes">Yes</td>
+			<td class="no">No</td>
+		</tr>
+		<tr>
+			<td class="label">Easy to use in frontend code</td>
+			<td class="no">No</td>
+			<td class="yes">Yes</td>
+			<td class="no">No</td>
+			<td class="yes">Yes</td>
+		</tr>
+		<tr>
+			<td class="label">Everyone does it</td>
+			<td class="yes">Yes</td>
+			<td class="no">No</td>
+			<td class="no">No</td>
+			<td class="no">No</td>
+		</tr>
+	</tbody>
+</table>
+
+<h1 id="quickstart">Quickstart</h1>
+<span class="examplebutton" onclick="exampleFrontend.style.display = exampleFrontend.style.display !== 'block' ? 'block' : 'none'; event.preventDefault()">▸ Show example of calling a sherpa function in frontend code</span><br/>
+<code id="exampleFrontend" style="display:none"><pre>
+&lt;script src="https://sherpa.irias.nl/exampleapi/sherpa.js"&gt;&lt;/script&gt;
 &lt;script&gt;
-	window.exampleapi.requestCount()
-	.then(function(result) {
-		alert('Number of requests: '+result);
-	}, function(error) {
-		alert('Error: '+JSON.stringify(error));
-	});
-&lt;/script&gt;</pre></code>
+    exampleapi.requestCount()
+        .then(function(count) {
+            console.log('successful result', count);
+        }, function(error) {
+            console.error('an error occurred', error.code, error.message);
+        });
+&lt;/script&gt;
+</pre></code>
 
-<h1 id="sherpaweb"><a href="#sherpaweb">Sherpaweb</a></h1>
-<p>
-<a href="https://bitbucket.org/mjl/sherpaweb/">Sherpaweb</a> is a simple web app that renders the documentation provided by Sherpa API's. Given a Sherpa API URL, sherpaweb will:
-</p>
-<ul>
-<li>Show you the API documentation.</li>
-<li>Let you call API functions with parameters you provide.</li>
-</ul>
+<p><span class="examplebutton" onclick="exampleBackend.style.display = exampleBackend.style.display !== 'block' ? 'block' : 'none'; event.preventDefault()">▸ Show example of exporting a sherpa function in Go</span></p>
+<code id="exampleBackend" style="display:none"><pre>
+package main;
 
-<p>
-Discovering the functionality of an API was never this easy.
-</p>
+import (
+    "net/http"
+    "bitbucket.org/mjl/sherpa"
+)
 
-<p>
-A public sherpaweb instance is running at <a href="https://sherpa.irias.nl/">sherpa.irias.nl</a>. It will work with any Sherpa API that your browser has access to.
-</p>
-<p>
-Open <a href="https://sherpa.irias.nl/x/sherpa.irias.nl/exampleapi/">sherpa.irias.nl/x/sherpa.irias.nl/exampleapi/</a> to look at sherpaweb's builtin example API.
-</p>
+var count int64
+func RequestCount() int64 {
+    count += 1
+    return count
+}
 
-<h1 id="implementing-a-sherpa-api"><a href="#implementing-a-sherpa-api">Implementing a Sherpa API</a></h1>
-<p>
-Is easy:
-</p>
-<ol>
-<li>Implement the functions you want to export in your programming language of choice.</li>
-<li>Pick (or create) a Sherpa API server <a href="implementations/">implementation</a>.</li>
-</ol>
-<p>
-For a real-world usage example, see sherpaweb's <a href="https://bitbucket.org/mjl/sherpaweb/src/default/exampleapi/exampleapi.go?fileviewer=file-view-default">exampleapi.go</a>.  The API documentation is written as Go comments, just like you would normally write comments for your code. The sherpa library for Go comes with a tool called sherpadocs that will turn those comments into a JSON file suitable for use as API documentation. This makes it effortless to write and publish documentation for your API's.
-</p>
+func main() {
+    functions := map[string]interface{}{
+        "requestCount": RequestCount,
+    }
+    api, _ := sherpa.NewHandler("http://localhost:8080/exampleapi/",
+        "exampleapi", "Example API", "0.0.1", functions)
+    http.Handle("/exampleapi/", http.StripPrefix("/exampleapi/", api))
+    http.ListenAndServe(":8080", nil)
+}
+</pre></code>
 
+
+<h1 id="more">More</h1>
+<p>
+See the <a href="specification/">specification</a> for all the details.<br/>
+Read <a href="why/">why</a> sherpa was created.<br/>
+Learn more from the <a href="faq/">frequently asked questions</a>.
+</p>
 	</body>
 </html>

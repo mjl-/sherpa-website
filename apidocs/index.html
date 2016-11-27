@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>API Documentation - Sherpa</title>
+		<link rel="stylesheet" href="../style.css" />
+	</head>
+	<body>
+<div class="crumbs">
+	<a href="../../">mjl</a> &gt;
+	<a href="../">sherpa</a> &gt;
+	<a class="last" href="./">api documentation</a>
+</div>
+
+<div class="tocbar">
+	<a href="../">Intro</a> |
+	<a class="active" href="../apidocs/">API documentation</a> |
+	<a href="../sherpajs/">sherpa.js</a> |
+	<a href="../implementations/">Libraries</a> |
+	<a href="../specification/">Specification</a> |
+	<a href="../why/">Why</a> |
+	<a href="../faq/">FAQ</a>
+</div>
+
+<h1 id="documentation"><a href="#documentation">Why documentation?</a></h1>
+<p>Documentation is need to use an API properly. It's important, but it takes a lot of time to write, easily gets out of sync with the code, and requires effort to publish.</p>
+
+<p>
+Not with Sherpa. Of course, you still need to write documentation. But it is kept right with your code, making it easy to keep up to date. And you don't need a separate tool to generate documentation. Or setups to serve the documentation. That's all provided automatically by the sherpa library for your programming language.
+</p>
+
+<h1 id="example-documentation"><a href="#example-documentation">Example documentation</a></h1>
+<p>An example of sherpa documentation can be found at:</p>
+<blockquote><a href="https://sherpa.irias.nl/#https://sherpa.irias.nl/exampleapi/">sherpa.irias.nl/#https://sherpa.irias.nl/exampleapi/</a></blockquote>
+
+<h1 id="how"><a href="#how">How does it work?</a></h1>
+<p>Sherpa API's provide their own documentation through a simple mechanism. Here is how it works. An API simply exports a function called <tt>_docs</tt>. It returns documentation in a simple JSON format, with text in markdown.</p>
+<p><a href="../implementations/">Server libraries</a> help you deliver this documentation as part of your API, by using comments from your source code or through code annotations.</p>
+
+<h1 id="reading"><a href="#reading">How do I read documentation</a></h1>
+<p>Using sherpaweb. Sherpaweb is a simple web app that lets you easily read this documentation and lets you find your way around the API by letting you call functions and displaying the results. It's pure html/javascript.</p>
+<p>A public sherpaweb instance is running at:</p>
+<p style="padding-left:4em"><a href="https://sherpa.irias.nl">sherpa.irias.nl</a></p>
+
+<p>Running your own sherpaweb is also easy: Use the pre-compiled stand-alone binary (it just serves the static files), or take the html/js from source.  Remember that your browser reads and renders documentation, so you can use the public sherpaweb for your internal/local API's as well.</p>
+
+<h2 id="download"><a href="#download">Download</a></h2>
+<p>
+The following binaries are available:
+</p>
+<ul>
+<li><a href="../download/sherpaweb-0.0.5-linux-amd64.gz">sherpaweb-0.0.5-linux-amd64.gz</a> (linux)</li>
+<li><a href="../download/sherpaweb-0.0.5-darwin-amd64.gz">sherpaweb-0.0.5-darwin-amd64.gz</a> (macos)</li>
+<li><a href="../download/sherpaweb-0.0.5.zip">sherpaweb-0.0.5.zip</a> (windows)</li>
+</ul>
+
+<h2 id="code"><a href="#code">Code</a></h2>
+<p>
+Sherpaweb is MIT-licensed, maintained at <a href="https://bitbucket.org/mjl/sherpaweb/">bitbucket.org/mjl/sherpaweb/</a> using Mercurial. It's written in Go. See the README on how to compile.
+</p>
+	</body>
+</html>

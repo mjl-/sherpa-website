@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
 		<title>Specification - Sherpa</title>
 		<link rel="stylesheet" href="../style.css" />
 	</head>
@@ -13,24 +14,24 @@
 </div>
 
 <div class="tocbar">
-	<a href="../">Sherpa</a> |
+	<a href="../">Intro</a> |
+	<a href="../apidocs/">API documentation</a> |
+	<a href="../sherpajs/">sherpa.js</a> |
+	<a href="../implementations/">Libraries</a> |
 	<a class="active" href="../specification/">Specification</a> |
-	<a href="../sherpajs/">Sherpajs</a> |
-	<a href="../implementations/">Implementations</a> |
 	<a href="../why/">Why</a> |
-	<a href="../faq/">FAQ</a> |
-	<a href="../about/">About</a>
+	<a href="../faq/">FAQ</a>
 </div>
 
 <div class="warning">
-This is work in progress!
+Sherpa is still work in progress!  It works well, but the specification might still change.
 </div>
 
 <h1 id="specification"><a href="#specification">Specification</a></h1>
 
 <p>
 A Sherpa API is provided at a URL, for example <code>https://sherpa.irias.nl/exampleapi/</code>.
-Sherpa API's are designed to be easy to implement and easy to use. A Sherpa API is usually implemented using a library, but writing Sherpa support directly into your application is also a viable option. This document describes how Sherpa API's work and what you must do to implement a Sherpa API.
+Sherpa API's are designed to be easy to implement on the server side, and easy to use on the client (browser) side. A Sherpa API is usually implemented using a library, but writing Sherpa support directly into your application is also a viable option. This document describes how Sherpa API's work and what you must do to implement a Sherpa API.
 </p>
 
 <p>
@@ -130,10 +131,6 @@ The thenable-objects can be transformed by setting the attribute <code>_wrapThen
 The API object has a field <code>_sherpa</code>, containing the JSON document from <i>sherpa.json</i>.
 </p>
 
-<p>
-The API object also provides a function <code>_call</code>. Its first parameter should be the function name to call, the remaining will be parameters used in the Sherpa API call.
-</p>
-
 
 <h2 id="post-function"><a href="#post-function">POST <code>&lt;URL&gt;/<i>functionName</i></code></a></h2>
 
@@ -161,7 +158,7 @@ On success, the <code>result</code> field contains the function return value. Th
 }</pre></code>
 
 <p>
-On error, the <code>error</code> field contains an error object. An error object in turn contains two fields, both strings:
+On error, the <code>error</code> field contains an error object. An error object in turn contains at least the following fields:
 </p>
 
 <ul>
@@ -180,23 +177,18 @@ An example error response:
 }</pre></code>
 
 <p>
-For forward compatibility, Sherpa API developers should not provide function names starting with an underscore other than those specified in this document.
-</p>
-
-<h3 id="notes-on-post"><a href="#notes-on-post">Notes on POST</a></h3>
-<p>
-The reason the function name is part of the URL and not part of the JSON body is purely convenience for web developers. With this scheme, it is easy to see which functions are being called in browser developer consoles that show HTTP requests. In an early draft of this specification, the function name was part of the JSON request body.
-</p>
-
-<p>
 Error messages should start with a lower case letter and not end with a dot. This lets you easily combine (prepend/append) strings that create a full error message for display to the user.
 </p>
 
 <p>
-HTTP status codes are not used to indicate success or failure. The POST should almost always return a status 200 "OK", so even if the function called returned an error. The exception is if the function name does not exist. In that case, the HTTP status should be 404 "File not Found". The rationale is that if an API disappears, or a programmer used an incorrect API URL, function calls would return status 404 as well, so Sherpa libraries should expect and gracefully handle 404's.
+For forward compatibility, Sherpa API developers should not provide function names starting with an underscore other than those specified in this document.
 </p>
 
 <h3 id="error-codes"><a href="#error-codes">Error codes</a></h3>
+<p>
+HTTP status codes are not used to indicate success or failure. The POST should almost always return a status 200 "OK", so even if the function called returned an error. The exception is if the function name does not exist. In that case, the HTTP status should be 404 "File not Found". The rationale is that if an API disappears, or a programmer used an incorrect API URL, function calls would return status 404 as well, so Sherpa libraries should expect and gracefully handle 404's.
+</p>
+
 <p>
 Sherpa defines several commonly used error codes, all starting with "sherpa":
 </p>
@@ -219,21 +211,34 @@ Sherpa defines several commonly used error codes, all starting with "sherpa":
 	<dt>sherpaClientError</dt>
 	<dd>A client-side library error has occurred.</dd>
 
+	<dt>sherpaServerError</dt>
+	<dd>A server-side error has occurred. Typically an unhandled error while executing the function call.</dd>
+
 	<dt>sherpaNoAPI</dt>
 	<dd>No API seems to be available at this URL (it returned a 404).</dd>
 </dl>
 
+<h2 id="get-function"><a href="#get-function">GET <code>&lt;URL&gt;/<i>functionName</i></code></a></h2>
+
+<p>
+Instead of using HTTP POST, you can also call a function with a HTTP GET. An optional query string parameter <tt>body</tt> (defaulting to no parameters) in the same format as the POST JSON body can be set to pass parameters. The response is the same as for HTTP POST requests.
+</p>
+
+<p>
+JSONP is also supported: If the query string parameter <tt>callback</tt> is present, the repsonse will be a JavaScript file that calls the specified <tt>callback</tt> with the response object as parameter.
+</p>
+
 
 <h2 id="get-slash"><a href="#get-slash">GET <code>&lt;URL&gt;/</code></a></h2>
 <p>
-A GET on the Sherpa API base URL can optionally provide useful information about the API. A typical response, though optional, is to show a minimal page explaining this is a Sherpa API, has the JavaScript API loaded for quick experimentation, followed by a link to the documentation and more information about Sherpa in general.
+A GET on the Sherpa API base URL can provide free-form, useful information about the API. A typical response is to show a minimal page explaining this is a Sherpa API, and that has the JavaScript API loaded for quick experimentation, followed by a link to the documentation and more information about Sherpa in general.
 </p>
 
 <p>
 See sherpaweb's exampleapi: <a href="https://sherpa.irias.nl/exampleapi/">sherpa.irias.nl/exampleapi/</a>.
 </p>
 
-<h1 id="notes"><a href="#notes">Notes</a></h1>
+<h1 id="additional-requirements"><a href="#additional-requirements">Additional requirements</a></h1>
 
 <p>
 The endpoints above are all that is needed to implement a Sherpa API. This section lists additional requirements.
@@ -244,7 +249,15 @@ The HTTP responses must include CORS-headers allowing use from other domains. Th
 </p>
 
 <p>
-All data in Sherpa is UTF-8. This includes JSON request and response bodies, and JavaScript. To keep implementations simple, sherpa does not look at "Content-Type" headers for character set information.
+All data in Sherpa is UTF-8. This includes JSON request and response bodies, and JavaScript. Sherpa API's should check that the Content-Type of POST function calls is application/json. If the "charset" is set, it should be "utf-8".  In the future, other content-types might be treated differently.
+</p>
+
+<p>
+All Sherpa function call responses should disallow caching by setting a response header "Cache-Control: no-store".
+</p>
+
+<p>
+Sherpa API's don't have to support HTTP HEAD requests on function URLs.
 </p>
 
 <h1 id="documentation"><a href="#documentation">Documentation</a></h1>
@@ -278,23 +291,5 @@ Both the main <code>text</code> and function <code>text</code> fields should be 
 <p>
 The <code>text</code>-field in a "function"-object should start with a line containing the function signature, showing its parameters with types, and the return type (in free-form).
 </p>
-
-
-<h1 id="future-development"><a href="#future-development">Future development</a></h1>
-<p>
-Some things that will probably happen soon:
-</p>
-<ul>
-<li>Multicall support</li>
-<li>JSONP support</li>
-<li>Support for uploading files</li>
-</ul>
-
-<p>
-Things not planned yet, but that may happen in the future.
-</p>
-<ul>
-<li>Provide more structure for documentation. Such as explicit structure for function signatures, error codes.</li>
-</ul>
 	</body>
 </html>

@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
 		<title>FAQ - Sherpa</title>
 		<link rel="stylesheet" href="../style.css" />
 	</head>
@@ -13,16 +14,51 @@
 </div>
 
 <div class="tocbar">
-	<a href="../">Sherpa</a> |
+	<a href="../">Intro</a> |
+	<a href="../apidocs/">API documentation</a> |
+	<a href="../sherpajs/">sherpa.js</a> |
+	<a href="../implementations/">Libraries</a> |
 	<a href="../specification/">Specification</a> |
-	<a href="../sherpajs/">Sherpajs</a> |
-	<a href="../implementations/">Implementations</a> |
 	<a href="../why/">Why</a> |
-	<a class="active" href="../faq/">FAQ</a> |
-	<a href="../about/">About</a>
+	<a class="active" href="../faq/">FAQ</a>
 </div>
 
-<h1 id="faq"><a href="#faq">FAQ</a></h1>
+<!--
+regenerate toc using:
+sed -n 's,^<h2 id="\([^"]*\)"><a href="[^"]*">\([^<]*\)</a></h2>.*$,<li><a href="#\1">\2</a></li>,p' < faq/index.html 
+-->
+
+<h1 id="questions"><a href="#questions">Questions</a></h1>
+<ul>
+<li><a href="#name">What does Sherpa mean?</a></li>
+<li><a href="#restful">Are Sherpa API's RESTful?</a></li>
+<li><a href="#versioninga">How does Sherpa do API versioning?</a></li>
+<li><a href="#documenting">How do you document a Sherpa API?</a></li>
+<li><a href="#caching">Does Sherpa cache responses?</a></li>
+<li><a href="#scalable">So will Sherpa API's be scalable?</a></li>
+<li><a href="#filtering-sorting-paginating">Does Sherpa provide a standard way to filter/sort/paginate data?</a></li>
+<li><a href="#error-messages">How do I model error messages in Sherpa?</a></li>
+<li><a href="#multicall">Can I call multiple Sherpa function in a single HTTP request?</a></li>
+<li><a href="#function-in-url">Why are function names part of the URL?</a></li>
+<li><a href="#server-sent-events-or-websockets">Does Sherpa support server-sent events or websockets?</a></li>
+<li><a href="#restful-endpoints">Can I still use RESTful endpoints when using Sherpa?</a></li>
+<li><a href="#authentication">Does Sherpa provide an authentication mechanism?</a></li>
+<li><a href="#get">Does Sherpa support a HTTP GET to call a function?</a></li>
+<li><a href="#jsonp">Does Sherpa support JSONP?</a></li>
+<li><a href="#file-uploads">How should I implement file uploads?</a></li>
+<li><a href="#data-types">Why aren't parameter and return types part of function signatures?</a></li>
+<li><a href="#structured-documentation">Shouldn't Sherpa provide mechanisms for structuring documentation better?</a></li>
+<li><a href="#contribute">Can I contribute?</a></li>
+<li><a href="#authors">Who created sherpa?</a></li>
+</ul>
+
+
+<h1 id="answers"><a href="#faq">Answers</a></h1>
+<h2 id="name"><a href="#name">What does Sherpa mean?</a></h2>
+<p>
+<span style="font-weight:normal; font-size:1.1rem"><b>S</b>imple <b>H</b>TTP <b>RP</b>C <b>A</b>PI's</span>
+</p>
+
 <h2 id="restful"><a href="#restful">Are Sherpa API's RESTful?</a></h2>
 <p>
 Not really. REST API's take a data-centric approach. They try to model the data on URL's, and use HTTP methods to model operations. Sherpa API's take a function centric approach, just like JSON-RPC and (a longer time ago) XMLRPC. Sherpa API's takes away all the trouble of coming up with proper URL mappings, HTTP method mappings and header intricacies (typically simply ignored by REST API designers).
@@ -38,17 +74,20 @@ With REST, some people put a version number in the URLs. This is not really REST
 
 <h2 id="documenting"><a href="#documenting">How do you document a Sherpa API?</a></h2>
 <p>
-Documentation is a strength of Sherpa API's. You simply provide a Sherpa function called <code>_docs</code> that returns a simple JSON document containing part structured documentation, part markdown. The tool sherpaweb, publicly available at <a href="https://sherpa.irias.nl/">sherpa.irias.nl</a> can fetch and return any documentation for you.
+Documentation is a strength of Sherpa API's. Depending on your programming language, and sherpa library, you either write regular comments for your sherpa-exported functions, or add annotations to your code.  Sherpa library then provide a function named <code>_docs</code> that returns a simple JSON document containing part structured documentation, part markdown.
+</p>
+<p>
+The tool sherpaweb, publicly available at <a href="https://sherpa.irias.nl/">sherpa.irias.nl</a> can fetch and return any documentation for you.  You can also call the functions on sherpa.irias.nl: it is also automatically an API playground.
 </p>
 
 <h2 id="caching"><a href="#caching">Does Sherpa cache responses?</a></h2>
 <p>
-No, Sherpa does not. All client-side API calls will result in a HTTP request. An API is free to document that some function results can be cached by a client. But this is not built into Sherpa API's.
+No, Sherpa does not. All client-side API calls will result in a HTTP request. An API is free to cache results and return them in later requests.  And an API is free to document that some function results can be cached by a client. But this is not built into Sherpa API's.
 </p>
 
 <h2 id="scalable"><a href="#scalable">So will Sherpa API's be scalable?</a></h2>
 <p>
-Caching is a way to make web API's scalable. If Sherpa doesn't return cacheable response, how can you make scalable API's?
+<i>"Caching is a way to make web API's scalable. If Sherpa doesn't return cacheable response, how can you make scalable API's?"</i>
 </p>
 <p>
 Well, you use as many servers as you need to serve the HTTP requests. You can still do caching in your backend, which you are probably doing already if you have a web service that needs to be "scalable". So nothing new really.
@@ -56,7 +95,7 @@ Well, you use as many servers as you need to serve the HTTP requests. You can st
 
 <h2 id="filtering-sorting-paginating"><a href="#filtering-sorting-paginating">Does Sherpa provide a standard way to filter/sort/paginate data?</a></h2>
 <p>
-No. Just like REST API's don't. Maybe Sherpa can prescribe useful mechanisms for these in the future. Right now, you explicitly need to pass such query parameters in the Sherpa API calls. At least that makes them implicit. As opposed to the easy-to-get-wrong query string parameters in most REST API's.
+No. Just like REST API's don't. Maybe Sherpa can prescribe useful mechanisms for these in the future. Right now, you explicitly need to pass such query parameters in the Sherpa API calls. At least that makes them implicit. As opposed to the easy-to-get-wrong-and-subsequently-ignored query string parameters in most REST API's.
 </p>
 
 <h2 id="error-messages"><a href="#error-messages">How do I model error messages in Sherpa?</a></h2>
@@ -66,17 +105,25 @@ It's about time you start reading the specification! To summarize: A call result
 
 <h2 id="multicall"><a href="#multicall">Can I call multiple Sherpa function in a single HTTP request?</a></h2>
 <p>
-Not yet. It's on the to do list. Help us!
+Not yet. It's on the to do list. Feel free to implement a mechanism and send it in!
 </p>
+
+<h2 id="function-in-url"><a href="#function-in-url">Why are function names part of the URL?</a></h2>
+<p>
+In an early draft of Sherpa, they weren't. Like in JSON-RPC, they were part of the request body. However, that's not very convenient to web developers. With function names in the URLs, it's easy to see which functions are being called in browser developer consoles that show HTTP requests.
+
 
 <h2 id="server-sent-events-or-websockets"><a href="#server-sent-events-or-websockets">Does Sherpa support server-sent events or websockets?</a></h2>
 <p>
-Not yet. For now it's best to create separate HTTP endpoints for such services. You can still document them with Sherpa. Perhaps in the future it'll be part of Sherpa, but they may stay too dissimilar to normal remote procedure calling.
+Not yet. For now it's best to create separate HTTP endpoints for such services. You could still explain and point to them using Sherpa documentation. Perhaps in the future it'll be part of Sherpa, but they may stay too dissimilar to normal remote procedure calling.
 </p>
 
 <h2 id="restful-endpoints"><a href="#restful-endpoints">Can I still use RESTful endpoints when using Sherpa?</a></h2>
 <p>
-Absolutely! In fact, there are two good reasons to use old-fashioned RESTful endponts:
+Of course! (:
+</p>
+<p>
+In fact, there are two good reasons to use old-fashioned RESTful endponts:
 </p>
 <ul>
 <li>You really truly need the response to be cacheable.</li>
@@ -88,22 +135,53 @@ Absolutely! In fact, there are two good reasons to use old-fashioned RESTful end
 No. You could use JSON web tokens. Or even HTTP basic/digest auth (over HTTPS). Authentication is too broad a subject to put into Sherpa.
 </p>
 
+<h2 id="get"><a href="#get">Does Sherpa support a HTTP GET to call a function?</a></h2>
+<p>
+Yes. Just do a GET instead of a POST on a function. You can pass parameters in the regular JSON format, but you must pass the JSON body (properly URL-escaped) in a query string parameter called <tt>body</tt>.
+</p>
+<p>
+One of the reasons is that it makes uptime monitoring tools easier to use: Just pass them a URL they will GET. It also makes passing around example URLs for APIs a bit easier.
+</p>
+
 <h2 id="jsonp"><a href="#jsonp">Does Sherpa support JSONP?</a></h2>
 <p>
-JSONP calls are not yet supported. There is no reason is cannot be supported though, so a scheme will probably be designed when the need arises. Or maybe you'll beat me to it. (;
+Yes. Just do a GET on a function and add the query string <tt>?callback=...</tt> with a callback of your choosing.
 </p>
 
 <h2 id="file-uploads"><a href="#file-uploads">How should I implement file uploads?</a></h2>
 <p>
-This will probably come soon. It isn't in Sherpa yet though.
+Sherpa doesn't prescribe any way to handle file uploads. In practice, it's often good enough to just data-URL encode file uploads and put that inside JSON.  It's not ideal: the file sizes become larger (due to base64 and absence of gzip while uploading). Sherpa might need a better scheme in the future...
 </p>
 
 <h2 id="data-types"><a href="#data-types">Why aren't parameter and return types part of function signatures?</a></h2>
 <p>
-First, dynamic languages don't need or even use types. Requiring type specification could become too much of a burden.
+First, dynamic languages (eg JavaScript) don't need or make use of such type information. Requiring type specification could become too much of a burden.
 </p>
 <p>
-Second, the Sherpa specification, and its implementations, would become much more complicated. Probably so much that isn't worth the trouble.
+Second, the Sherpa specification, and its implementations, would become much more complicated. It's not the sweet spot Sherpa is aiming for.
+</p>
+
+<h2 id="structured-documentation"><a href="#structured-documentation">Shouldn't Sherpa provide mechanisms for structuring documentation better?</a></h2>
+<p>
+Sherpa allows writing documentation per API section, and per function within each section. This documentation is in markdown. This lets you created tables, bullet points, links, etc.  You can also provide further visual structure by using HTML. There is no structured way to indicate which error codes can be returned, or whether a function requires authentication (as defined by your API), or to show example parameters and an example response.  When the need is strong enough, it'll be added.
+</p>
+
+
+<h2 id="contribute"><a href="#contribute">Can I contribute?</a></h2>
+<p>
+Of course!  Suggestions, bug reports, patches, complaints, hugs, insights.  All very welcome.
+</p>
+
+<p>Use the following repositories:</p>
+<ul>
+<li><a href="https://bitbucket.org/mjl/sherpa-website/">bitbucket.org/mjl/sherpa-website</a>: this website, including the specification</li>
+<li><a href="https://bitbucket.org/mjl/sherpaweb/">bitbucket.org/mjl/sherpaweb</a>: sherpaweb, for reading API documentation, the code running <a href="https://sherpa.irias.nl">sherpa.irias.nl</a></li>
+<li><a href="https://bitbucket.org/mjl/sherpa/">bitbucket.org/mjl/sherpa</a>: the reference library in Go</li>
+</ul>
+
+<h2 id="authors"><a href="#authors">Who created sherpa?</a></h2>
+<p>
+Sherpa was created by Mechiel Lukkien, <a href="mailto:mechiel@ueber.net">mechiel@ueber.net</a>.
 </p>
 	</body>
 </html>
