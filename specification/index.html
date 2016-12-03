@@ -30,7 +30,7 @@ Sherpa is still work in progress!  It works well, but the specification might st
 <h1 id="specification"><a href="#specification">Specification</a></h1>
 
 <p>
-A Sherpa API is provided at a URL, for example <code>https://sherpa.irias.nl/exampleapi/</code>.
+A Sherpa API is provided at a URL, for example <code>https://sherpa.irias.nl/example/</code>.
 Sherpa API's are designed to be easy to implement on the server side, and easy to use on the client (browser) side. A Sherpa API is usually implemented using a library, but writing Sherpa support directly into your application is also a viable option. This document describes how Sherpa API's work and what you must do to implement a Sherpa API.
 </p>
 
@@ -45,22 +45,22 @@ Sherpa API's summarized:
 </ul>
 
 <p>
-This specification continues with the URL endpoints a Sherpa API must implement. We use sherpaweb's "Example API" as an example: <code>https://sherpa.irias.nl/exampleapi/</code>.
+This specification continues with the URL endpoints a Sherpa API must implement. We use sherpaweb's "Example API" as an example: <code>https://sherpa.irias.nl/example/</code>.
 </p>
 
 <h2 id="get-sherpa-json"><a href="#get-sherpa-json">GET <code>&lt;URL&gt;/sherpa.json</code></a></h2>
 
 <p>
-An API describes itself by a JSON file at called <a href="https://sherpa.irias.nl/exampleapi/sherpa.json"><i>sherpa.json</i></a>. Try opening it. It provides a document like the following.
+An API describes itself by a JSON file at called <a href="https://sherpa.irias.nl/example/sherpa.json"><i>sherpa.json</i></a>. Try opening it. It provides a document like the following.
 </p>
 
 <code><pre>
 {
-    "id": "exampleapi",
+    "id": "example",
     "title": "Example API",
     "version": "0.0.1",
     "sherpaVersion": 0,
-    "baseurl": "https://sherpa.irias.nl/exampleapi/",
+    "baseurl": "https://sherpa.irias.nl/example/",
     "functions": [
         "requestCount",
         "_docs"
@@ -235,7 +235,7 @@ A GET on the Sherpa API base URL can provide free-form, useful information about
 </p>
 
 <p>
-See sherpaweb's exampleapi: <a href="https://sherpa.irias.nl/exampleapi/">sherpa.irias.nl/exampleapi/</a>.
+See sherpaweb's example: <a href="https://sherpa.irias.nl/example/">sherpa.irias.nl/example/</a>.
 </p>
 
 <h1 id="additional-requirements"><a href="#additional-requirements">Additional requirements</a></h1>

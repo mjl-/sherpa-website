@@ -28,12 +28,12 @@
 
 <p>Especially for small or internal projects, where you create both the backend and the frontend code, this is all you need to create a web app.</p>
 
-<p>If a sherpa API lives at <a href="https://sherpa.irias.nl/exampleapi/">https://sherpa.irias.nl/exampleapi/</a> (try this link!), just add <tt>"sherpa.js"</tt> to load the library: <a href="https://sherpa.irias.nl/exampleapi/sherpa.js">https://sherpa.irias.nl/exampleapi/sherpa.js</a>. It exports an object <tt>"exampleapi"</tt> (named after the last element in the path of the URL) and contains all exported functions and a field <tt>"_sherpa"</tt> with basic information about this sherpa API.  The functions can be called and will return a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then">"thenable"</a>: An object on which you can call <tt>".then()"</tt> to register a success and error handler.</p>
+<p>If a sherpa API lives at <a href="https://sherpa.irias.nl/example/">https://sherpa.irias.nl/example/</a> (try this link!), just add <tt>"sherpa.js"</tt> to load the library: <a href="https://sherpa.irias.nl/example/sherpa.js">https://sherpa.irias.nl/example/sherpa.js</a>. It exports an object <tt>"example"</tt> (named after the last element in the path of the URL) and contains all exported functions and a field <tt>"_sherpa"</tt> with basic information about this sherpa API.  The functions can be called and will return a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then">"thenable"</a>: An object on which you can call <tt>".then()"</tt> to register a success and error handler.</p>
 
 <p>On success, your success handler will be called with a single value: whatever the server returned.  It's always a single value, functions that return multiple values will have a JavaScript array as a result.</p>
 <p>On error, you error handler will be called with an error object.  This object contains a field <tt>"code"</tt> (a string, to be used in your error handler, the API documentation will explain which errors can happen), and a field <tt>"message"</tt> (human-readable, for display to the end-user).</p>
 
-<p>Note: Thenable are not full promises. Not all browsers support promises natively. However, you can easily turn sherpa's thenable into promises (or something similar): Set the variable <tt>"_wrapThenable"</tt> on the sherpa api object to a function that takes a <i>thenable</i> as parameter, and that returns a promise(-like) object of your choosing. For example, your function could return <tt>"new Promise(thenable)"</tt>, or if you use angularjs, you can add a line <tt>"exampleapi._wrapThenable = $q;"</tt>.</p>
+<p>Note: Thenable are not full promises. Not all browsers support promises natively. However, you can easily turn sherpa's thenable into promises (or something similar): Set the variable <tt>"_wrapThenable"</tt> on the sherpa api object to a function that takes a <i>thenable</i> as parameter, and that returns a promise(-like) object of your choosing. For example, your function could return <tt>"new Promise(thenable)"</tt>, or if you use angularjs, you can add a line <tt>"example._wrapThenable = $q;"</tt>.</p>
 
 <p>That's all you need to know for the average web app.</p>
 
@@ -42,7 +42,7 @@
 
 <code><pre>var api = sherpa.init(baseURL,&nbsp;_sherpa)</pre></code>
 
-<p>Where <i>baseURL</i> could be "https://sherpa.irias.nl/exampleapi/" and <i>_sherpa</i> would be the content previously loaded from <i>baseURL/sherpa.json</i>.</p>
+<p>Where <i>baseURL</i> could be "https://sherpa.irias.nl/example/" and <i>_sherpa</i> would be the content previously loaded from <i>baseURL/sherpa.json</i>.</p>
 
 Alternatively, you can get a promise that resolves to an API object by calling:
 
@@ -53,9 +53,9 @@ Alternatively, you can get a promise that resolves to an API object by calling:
 
 <code><pre>&lt;script src="https://sherpa.irias.nl/s/js/sherpa.js"&gt;
 &lt;script&gt;
-var exampleapi = sherpa.init('https://sherpa.irias.nl/exampleapi/', {functions: ['requestCount']});
+var example = sherpa.init('https://sherpa.irias.nl/example/', {functions: ['requestCount']});
 
-exampleapi.requestCount()
+example.requestCount()
 .then(function(result) {
 	alert('Number of requests: '+result);
 }, function(error) {
@@ -68,9 +68,9 @@ exampleapi.requestCount()
 
 <code><pre>&lt;script src="https://sherpa.irias.nl/s/js/sherpa.js"&gt;
 &lt;script&gt;
-sherpa.load('https://sherpa.irias.nl/exampleapi/')
-.then(function(exampleapi) {
-	exampleapi.requestCount()
+sherpa.load('https://sherpa.irias.nl/example/')
+.then(function(example) {
+	example.requestCount()
 	.then(function(result) {
 		alert('Number of requests: '+result);
 	}, function(error) {

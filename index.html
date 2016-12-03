@@ -90,9 +90,9 @@
 <h1 id="quickstart">Quickstart</h1>
 <span class="examplebutton" onclick="exampleFrontend.style.display = exampleFrontend.style.display !== 'block' ? 'block' : 'none'; event.preventDefault()">▸ Show example of calling a sherpa function in frontend code</span><br/>
 <code id="exampleFrontend" style="display:none"><pre>
-&lt;script src="https://sherpa.irias.nl/exampleapi/sherpa.js"&gt;&lt;/script&gt;
+&lt;script src="https://sherpa.irias.nl/example/sherpa.js"&gt;&lt;/script&gt;
 &lt;script&gt;
-    exampleapi.requestCount()
+    example.requestCount()
         .then(function(count) {
             console.log('successful result', count);
         }, function(error) {
@@ -120,9 +120,9 @@ func main() {
     functions := map[string]interface{}{
         "requestCount": RequestCount,
     }
-    api, _ := sherpa.NewHandler("http://localhost:8080/exampleapi/",
-        "exampleapi", "Example API", "0.0.1", functions)
-    http.Handle("/exampleapi/", http.StripPrefix("/exampleapi/", api))
+    api, _ := sherpa.NewHandler("http://localhost:8080/example/",
+        "example", "Example API", "0.0.1", functions)
+    http.Handle("/example/", http.StripPrefix("/example/", api))
     http.ListenAndServe(":8080", nil)
 }
 </pre></code>
