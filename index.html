@@ -15,22 +15,22 @@
 <div class="tocbar">
 	<a class="active" href="./">Intro</a> |
 	<a href="apidocs/">API documentation</a> |
-	<a href="sherpajs/">sherpa.js</a> |
+	<a href="sherpajs/">Consuming</a> |
 	<a href="specification/">Specification</a> |
 	<a href="implementations/">Implementations</a> |
 	<a href="faq/">FAQ</a> |
 	<a href="why/">Why</a>
 </div>
 
-<h1 id="sherpa"><a href="#sherpa">Sherpa</a> - simple web API's</h1>
+<h1 id="sherpa"><a href="#sherpa">Sherpa</a></h1>
 
-Sherpa is a protocol with a <a href="specification/">specification</a> and has <a href="implementations/">implementations</a> in several languages.
+Sherpa is a simple protocol for creating web API's with a <a href="specification/">specification</a> and has <a href="implementations/">implementations in several languages</a>.
 
 <h2>Why sherpa?</h2>
 It's simple for:
 <ul>
 <li>Backend developers: Trivially export your functions using one of the small <a href="implementations/">libraries</a>.</li>
-<li>Frontend developers: Include a <a href="sherpajs/">sherpa.js</a>, call a function and get a promise back.</li>
+<li>Frontend developers: Include a <a href="sherpajs/">sherpa.js</a>, call a function and get a promise back. Optionally use typescript for typechecked function calls.</li>
 <li>All developers: API's are self-describing and self-documenting, see <a href="apidocs/">API documentation</a>.</li>
 </ul>
 
@@ -94,7 +94,7 @@ It's simple for:
 <h1 id="quickstart">Quickstart - Examples</h1>
 <p>Call function of existing sherpa API in web app:</p>
 <code><pre style="font-size:0.8rem">
-&lt;script src="https://sherpa.irias.nl/example/sherpa.js"&gt;&lt;/script&gt;
+&lt;script src="https://www.sherpadoc.org/example/sherpa.js"&gt;&lt;/script&gt;
 &lt;script&gt;
     example.requestCount()
         .then(function(count) {

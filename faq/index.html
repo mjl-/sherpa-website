@@ -16,7 +16,7 @@
 <div class="tocbar">
 	<a href="../">Intro</a> |
 	<a href="../apidocs/">API documentation</a> |
-	<a href="../sherpajs/">sherpa.js</a> |
+	<a href="../sherpajs/">Consuming</a> |
 	<a href="../specification/">Specification</a> |
 	<a href="../implementations/">Implementations</a> |
 	<a class="active" href="../faq/">FAQ</a> |
@@ -46,8 +46,6 @@ sed -n 's,^<h2 id="\([^"]*\)"><a href="[^"]*">\([^<]*\)</a></h2>.*$,<li><a href=
 <li><a href="#get">Does Sherpa support a HTTP GET to call a function?</a></li>
 <li><a href="#jsonp">Does Sherpa support JSONP?</a></li>
 <li><a href="#file-uploads">How should I implement file uploads?</a></li>
-<li><a href="#data-types">Why aren't parameter and return types part of function signatures?</a></li>
-<li><a href="#structured-documentation">Shouldn't Sherpa provide mechanisms for structuring documentation better?</a></li>
 <li><a href="#contribute">Can I contribute?</a></li>
 <li><a href="#authors">Who created sherpa?</a></li>
 </ul>
@@ -77,7 +75,7 @@ With REST, some people put a version number in the URLs. This is not really REST
 Documentation is a strength of Sherpa API's. Depending on your programming language, and sherpa library, you either write regular comments for your sherpa-exported functions, or add annotations to your code.  Sherpa library then provide a function named <code>_docs</code> that returns a simple JSON document containing part structured documentation, part markdown.
 </p>
 <p>
-The tool sherpaweb, publicly available at <a href="https://sherpa.irias.nl/">sherpa.irias.nl</a> can fetch and return any documentation for you.  You can also call the functions on sherpa.irias.nl: it is also automatically an API playground.
+The tool sherpaweb, publicly available at <a href="https://www.sherpadoc.org/">sherpadoc.org</a> can fetch and return any documentation for you.  You can also call the functions on sherpadoc.org: it is also automatically an API playground.
 </p>
 
 <h2 id="caching"><a href="#caching">Does Sherpa cache responses?</a></h2>
@@ -153,20 +151,6 @@ Yes. Just do a GET on a function and add the query string <tt>?callback=...</tt>
 Sherpa doesn't prescribe any way to handle file uploads. In practice, it's often good enough to just data-URL encode file uploads and put that inside JSON.  It's not ideal: the file sizes become larger (due to base64 and absence of gzip while uploading). Sherpa might need a better scheme in the future...
 </p>
 
-<h2 id="data-types"><a href="#data-types">Why aren't parameter and return types part of function signatures?</a></h2>
-<p>
-First, dynamic languages (eg JavaScript) don't need or make use of such type information. Requiring type specification could become too much of a burden.
-</p>
-<p>
-Second, the Sherpa specification, and its implementations, would become much more complicated. It's not the sweet spot Sherpa is aiming for.
-</p>
-
-<h2 id="structured-documentation"><a href="#structured-documentation">Shouldn't Sherpa provide mechanisms for structuring documentation better?</a></h2>
-<p>
-Sherpa allows writing documentation per API section, and per function within each section. This documentation is in markdown. This lets you created tables, bullet points, links, etc.  You can also provide further visual structure by using HTML. There is no structured way to indicate which error codes can be returned, or whether a function requires authentication (as defined by your API), or to show example parameters and an example response.  When the need is strong enough, it'll be added.
-</p>
-
-
 <h2 id="contribute"><a href="#contribute">Can I contribute?</a></h2>
 <p>
 Of course!  Suggestions, bug reports, patches, complaints, hugs, insights.  All very welcome.
@@ -175,7 +159,7 @@ Of course!  Suggestions, bug reports, patches, complaints, hugs, insights.  All 
 <p>Use the following repositories:</p>
 <ul>
 <li><a href="https://bitbucket.org/mjl/sherpa-website/">bitbucket.org/mjl/sherpa-website</a>: this website, including the specification</li>
-<li><a href="https://bitbucket.org/mjl/sherpaweb/">bitbucket.org/mjl/sherpaweb</a>: sherpaweb, for reading API documentation, the code running <a href="https://sherpa.irias.nl">sherpa.irias.nl</a></li>
+<li><a href="https://bitbucket.org/mjl/sherpaweb/">bitbucket.org/mjl/sherpaweb</a>: sherpaweb, for reading API documentation, the code running <a href="https://www.sherpadoc.org">sherpadoc.org</a></li>
 <li><a href="https://bitbucket.org/mjl/sherpa/">bitbucket.org/mjl/sherpa</a>: the reference library in Go</li>
 </ul>
 
