@@ -32,7 +32,7 @@ Not with Sherpa. Of course, you still need to write documentation. But it is kep
 
 <h1 id="example"><a href="#example">Example</a></h1>
 <p>An example of sherpa documentation can be found at:</p>
-<blockquote><a href="https://www.sherpadoc.org/#https://www.sherpadoc.org/example/">sherpadoc.org/#https://www.sherpadoc.org/example/</a></blockquote>
+<blockquote><a href="https://www.sherpadoc.org/#https://www.sherpadoc.org/1/example/">sherpadoc.org/#https://www.sherpadoc.org/1/example/</a></blockquote>
 
 <h1 id="how"><a href="#how">How does it work?</a></h1>
 <p>You write implementations for your API functions. And write comments in your code to document functions and types. Then you run the documentation-generating tool for your programming language. For the Go implementation this is "sherpadoc". It reads your code, finds the exported functions and types and associated comments, and generates a JSON file containing documentation. You pass that file to the sherpa server library in your application. When the sherpa  function <tt>_docs</tt> is called, the documentation JSON is returned.</p>
